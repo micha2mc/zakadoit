@@ -36,4 +36,3 @@ build/
 ### VS Code ###
 .vscode/
 frontend/generated/
-frontend/generated/flow/
