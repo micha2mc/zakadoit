@@ -6,6 +6,7 @@ target/
 mvnw.cmd
 mvnw
 .mvn/
+.mvn/wrapper
 
 ### STS ###
 .apt_generated
