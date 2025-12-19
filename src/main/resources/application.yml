@@ -1,0 +1,25 @@
+server:
+  port: ${PORT:8080}
+#spring:
+#  jpa:
+#    defer-datasource-initialization: true
+#  sql:
+#    init:
+#      mode: always  # o embedded
+#      data-locations: classpath:data.sql
+#      schema-locations: classpath:schema.sql
+
+# Launch the default browser when starting the application in development mode
+vaadin:
+  launch-browser: true
+  allowed-packages:
+    - "com.vaadin"
+    - "org.vaadin"
+    - "com.flowingcode"
+    - "com.uah.tfm.zakado.zkd"
+
+
+logging:
+  level:
+    org:
+      atmosphere: warn
