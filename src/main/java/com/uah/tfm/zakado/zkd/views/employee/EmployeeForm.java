@@ -2,7 +2,7 @@ package com.uah.tfm.zakado.zkd.views.employee;
 
 import com.uah.tfm.zakado.zkd.data.entity.Area;
 import com.uah.tfm.zakado.zkd.data.entity.Company;
-import com.uah.tfm.zakado.zkd.data.entity.Employee;
+import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -10,28 +10,29 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
+import lombok.Getter;
 
 import java.util.List;
 
 public class EmployeeForm extends FormLayout {
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
-    EmailField email = new EmailField("Email");
-    ComboBox<Area> status = new ComboBox<>("Area");
+    DatePicker dob = new DatePicker("Date Of Birth");
+    ComboBox<Area> area = new ComboBox<>("Area");
     ComboBox<Company> company = new ComboBox<>("Company");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
-    // Other fields omitted
-    Binder<Employee> binder = new BeanValidationBinder<>(Employee.class);
+
+    Binder<EmployeeDTO> binder = new BeanValidationBinder<>(EmployeeDTO.class);
 
     public EmployeeForm(List<Company> companies, List<Area> areas) {
         addClassName("employee-form");
@@ -39,14 +40,14 @@ public class EmployeeForm extends FormLayout {
 
         company.setItems(companies);
         company.setItemLabelGenerator(Company::getName);
-        status.setItems(areas);
-        status.setItemLabelGenerator(Area::getName);
+        area.setItems(areas);
+        area.setItemLabelGenerator(Area::getName);
 
         add(firstName,
                 lastName,
-                email,
+                dob,
                 company,
-                status,
+                area,
                 createButtonsLayout());
     }
 
@@ -58,47 +59,45 @@ public class EmployeeForm extends FormLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(event -> validateAndSave()); // <1>
+        save.addClickListener(event -> validateAndSave());
         delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
-        close.addClickListener(event -> fireEvent(new CloseEvent(this))); // <3>
+        close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid())); // <4>
+        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
         return new HorizontalLayout(save, delete, close);
     }
 
     private void validateAndSave() {
         if (binder.isValid()) {
-            fireEvent(new SaveEvent(this, binder.getBean())); // <6>
+            fireEvent(new SaveEvent(this, binder.getBean()));
         }
     }
 
 
-    public void setEmployee(Employee employee) {
+    public void setEmployee(EmployeeDTO employee) {
         binder.setBean(employee);
     }
 
     // Events
+    @Getter
     public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeeForm> {
-        private Employee employee;
+        private final EmployeeDTO employee;
 
-        protected EmployeeFormEvent(EmployeeForm source, Employee employee) {
+        protected EmployeeFormEvent(EmployeeForm source, EmployeeDTO employee) {
             super(source, false);
             this.employee = employee;
         }
 
-        public Employee getEmployee() {
-            return employee;
-        }
     }
 
     public static class SaveEvent extends EmployeeFormEvent {
-        SaveEvent(EmployeeForm source, Employee employee) {
+        SaveEvent(EmployeeForm source, EmployeeDTO employee) {
             super(source, employee);
         }
     }
 
     public static class DeleteEvent extends EmployeeFormEvent {
-        DeleteEvent(EmployeeForm source, Employee employee) {
+        DeleteEvent(EmployeeForm source, EmployeeDTO employee) {
             super(source, employee);
         }
 

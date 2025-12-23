@@ -10,16 +10,28 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@EqualsAndHashCode(callSuper = true, exclude = {"company", "area"})
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString(callSuper = true, exclude = {"company", "area"})
-public class Employee extends AbstractEntity {
+@AllArgsConstructor
+@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@Builder
+public class Employee{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "idgenerator")
+    @SequenceGenerator(name = "idgenerator",
+            initialValue = 1000)
+    private Long id;
+
+    @NotEmpty
     private String corporateKey;
+
+    @NotEmpty
     private String firstName;
+
+    @NotEmpty
     private String lastName;
 
     @Email
@@ -27,18 +39,20 @@ public class Employee extends AbstractEntity {
     private String email;
 
     @Column(name = "date_of_birth")
+    @NotNull
     private LocalDate dob;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    @NotNull
     @JsonIgnoreProperties({"employees"})
+    @NotNull
     private Company company;
 
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-    @ManyToOne
+    @JoinColumn(name = "area_id", nullable = false)
+    @JsonIgnoreProperties({"employees"})
     private Area area;
-
 }

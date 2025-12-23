@@ -1,13 +1,25 @@
 package com.uah.tfm.zakado.zkd.data.entity;
 
-import jakarta.persistence.Entity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
+import java.util.LinkedList;
+import java.util.List;
+
 @Entity
-@Data
-public class Area extends AbstractEntity {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Area{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "idgenerator_area")
+    private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Employee> employees = new LinkedList<>();
 }

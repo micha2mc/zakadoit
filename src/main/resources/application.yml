@@ -1,18 +1,20 @@
 server:
-  port: ${PORT:8080}
+  port: 8081
 spring:
   jpa:
     defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always  # o embedded
-      data-locations: classpath:data.sql
+  #sql:
+  #  init:
+  #    mode: embedded  # o always
+  #    data-locations: classpath:data.sql
+  mustache:
+    check-template-location: false
 vaadin:
   launch-browser: true
   allowed-packages:
     - "com.vaadin"
     - "org.vaadin"
-    - "com.flowingcode"
+    - "dev.hilla"
     - "com.uah.tfm.zakado.zkd"
 
 

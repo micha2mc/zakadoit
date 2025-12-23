@@ -5,7 +5,7 @@ INSERT INTO "AREA" (ID, NAME) VALUES
 (4, 'Ciberseguridad'),
 (5, 'Service Desk');
 
-INSERT INTO "COMPANY" (ID, NAME) VALUES
+INSERT INTO "COMPANIES" (ID, NAME) VALUES
 (1, 'ING'),
 (2, 'BBVA'),
 (3, 'SANTANDER'),

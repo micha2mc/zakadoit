@@ -1,8 +1,6 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
-import com.uah.tfm.zakado.zkd.data.entity.Employee;
-import com.uah.tfm.zakado.zkd.service.AreaService;
-import com.uah.tfm.zakado.zkd.service.CompanyService;
+import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.service.EmployeeService;
 import com.uah.tfm.zakado.zkd.views.MainLayout;
 import com.vaadin.flow.component.Component;
@@ -21,19 +19,14 @@ import org.springframework.context.annotation.Scope;
 @Route(value = "", layout = MainLayout.class)
 public class EmployeeView extends VerticalLayout {
 
-    Grid<Employee> grid = new Grid<>(Employee.class);
+    Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
     TextField filterText = new TextField();
     EmployeeForm form;
-    CompanyService companyService;
     EmployeeService employeeService;
-    AreaService areaService;
 
 
-    public EmployeeView(final CompanyService companyService, final EmployeeService employeeService,
-                        final AreaService areaService) {
-        this.companyService = companyService;
+    public EmployeeView(final EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.areaService = areaService;
         addClassName("employee-view");
         setSizeFull();
         configureGrid();
@@ -82,10 +75,10 @@ public class EmployeeView extends VerticalLayout {
 
     private void addEmployee() {
         grid.asSingleSelect().clear();
-        editEmployee(new Employee());
+        editEmployee(new EmployeeDTO());
     }
 
-    private void editEmployee(final Employee employee) {
+    private void editEmployee(final EmployeeDTO employee) {
         if (employee == null) {
             closeEditor();
         } else {
@@ -96,7 +89,7 @@ public class EmployeeView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new EmployeeForm(companyService.findAllCompanies(), areaService.findAllArea());
+        form = new EmployeeForm(employeeService.findAllCompanies(), employeeService.findAllArea());
         form.setWidth("25em");
         form.addSaveListener(this::saveContact); // <1>
         form.addDeleteListener(this::deleteEmployee); // <2>
@@ -106,7 +99,7 @@ public class EmployeeView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("employee-grid");
         grid.setSizeFull();
-        grid.setColumns("firstName", "lastName", "email");
+        grid.setColumns("corporateKey","firstName", "lastName", "email","dob");
         grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area");
         grid.addColumn(employee -> employee.getCompany().getName()).setHeader("Company");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));

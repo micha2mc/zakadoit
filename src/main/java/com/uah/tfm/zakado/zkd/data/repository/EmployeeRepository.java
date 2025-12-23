@@ -15,4 +15,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             or lower(e.lastName) like lower(concat('%', :searchTerm, '%'))
             """)
     List<Employee> searchEmployees(@Param("searchTerm") String searchTerm);
+
+    @Query(""" 
+            select e from Employee e 
+            where e.corporateKey = :ck
+            """)
+    Employee findEmployeeByCK(String ck);
 }

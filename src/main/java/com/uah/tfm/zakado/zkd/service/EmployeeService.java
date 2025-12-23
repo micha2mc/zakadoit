@@ -1,13 +1,18 @@
 package com.uah.tfm.zakado.zkd.service;
 
-import com.uah.tfm.zakado.zkd.data.entity.Employee;
+import com.uah.tfm.zakado.zkd.data.entity.Area;
+import com.uah.tfm.zakado.zkd.data.entity.Company;
+import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
 
 import java.util.List;
 
 public interface EmployeeService {
-    List<Employee> findAllEmployees(final String strFilter);
+    List<EmployeeDTO> findAllEmployees(final String strFilter);
 
-    void saveEmployee(final Employee employee);
+    void saveEmployee(final EmployeeDTO employee);
 
-    void deleteEmployee(final Employee employee);
+    void deleteEmployee(final EmployeeDTO employee);
+
+    List<Company> findAllCompanies();
+    List<Area> findAllArea();
 }
