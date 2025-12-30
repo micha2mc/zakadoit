@@ -6,10 +6,13 @@ import com.uah.tfm.zakado.zkd.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope("prototype")
 @Route(value = "", layout = MainLayout.class)
+@PageTitle("Employee | ZAKADO IT")
 public class EmployeeView extends VerticalLayout {
 
     Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
@@ -60,7 +64,7 @@ public class EmployeeView extends VerticalLayout {
     }
 
     private Component getToolbar() {
-        filterText.setPlaceholder("Filter by name...");
+        filterText.setPlaceholder("Filter by name or CK...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
@@ -91,15 +95,17 @@ public class EmployeeView extends VerticalLayout {
     private void configureForm() {
         form = new EmployeeForm(employeeService.findAllCompanies(), employeeService.findAllArea());
         form.setWidth("25em");
-        form.addSaveListener(this::saveContact); // <1>
-        form.addDeleteListener(this::deleteEmployee); // <2>
-        form.addCloseListener(e -> closeEditor()); // <3>
+        form.addSaveListener(this::saveContact);
+        form.addDeleteListener(this::deleteEmployee);
+        form.addCloseListener(e -> closeEditor());
     }
 
     private void configureGrid() {
         grid.addClassNames("employee-grid");
         grid.setSizeFull();
-        grid.setColumns("corporateKey","firstName", "lastName", "email","dob");
+        grid.setColumns("corporateKey","firstName", "lastName", "dob");
+        grid.addColumn(EmployeeDTO::getEmail)
+                        .setHeader(getEnvelopeIcon());
         grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area");
         grid.addColumn(employee -> employee.getCompany().getName()).setHeader("Company");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -115,5 +121,12 @@ public class EmployeeView extends VerticalLayout {
         content.addClassNames("content");
         content.setSizeFull();
         return content;
+    }
+
+    private Icon getEnvelopeIcon() {
+        Icon emailIcon = VaadinIcon.ENVELOPE.create();
+        emailIcon.setColor("var(--lumo-primary-color)");
+        emailIcon.setSize("16px");
+        return emailIcon;
     }
 }
