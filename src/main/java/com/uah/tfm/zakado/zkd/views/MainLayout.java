@@ -1,6 +1,8 @@
 package com.uah.tfm.zakado.zkd.views;
 
 import com.uah.tfm.zakado.zkd.views.employee.EmployeeView;
+import com.uah.tfm.zakado.zkd.views.utils.DashboardView;
+import com.uah.tfm.zakado.zkd.views.utils.DownloadReports;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -43,8 +45,9 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         addToDrawer(new VerticalLayout(
-                new RouterLink("List", EmployeeView.class)
-                //new RouterLink("Dashboard", DashboardView.class)
+                new RouterLink("Employees", EmployeeView.class),
+                new RouterLink("Dashboard", DashboardView.class),
+                new RouterLink("Reports", DownloadReports.class)
         ));
     }
 }

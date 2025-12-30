@@ -12,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
@@ -20,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope("prototype")
 @Route(value = "", layout = MainLayout.class)
-@PageTitle("Employee | ZAKADO IT")
 public class EmployeeView extends VerticalLayout {
 
     Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
@@ -95,9 +93,9 @@ public class EmployeeView extends VerticalLayout {
     private void configureForm() {
         form = new EmployeeForm(employeeService.findAllCompanies(), employeeService.findAllArea());
         form.setWidth("25em");
-        form.addSaveListener(this::saveContact);
-        form.addDeleteListener(this::deleteEmployee);
-        form.addCloseListener(e -> closeEditor());
+        form.addSaveListener(this::saveContact); // <1>
+        form.addDeleteListener(this::deleteEmployee); // <2>
+        form.addCloseListener(e -> closeEditor()); // <3>
     }
 
     private void configureGrid() {
@@ -113,6 +111,7 @@ public class EmployeeView extends VerticalLayout {
         grid.asSingleSelect().addValueChangeListener(event ->
                 editEmployee(event.getValue()));
     }
+
 
     private HorizontalLayout getContent() {
         HorizontalLayout content = new HorizontalLayout(grid, form);
