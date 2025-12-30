@@ -55,7 +55,7 @@ public class EmployeeView extends VerticalLayout {
         closeEditor();
     }
 
-    private void saveContact(EmployeeForm.SaveEvent event) {
+    private void saveEmployee(EmployeeForm.SaveEvent event) {
         employeeService.saveEmployee(event.getEmployee());
         updateList();
         closeEditor();
@@ -93,7 +93,7 @@ public class EmployeeView extends VerticalLayout {
     private void configureForm() {
         form = new EmployeeForm(employeeService.findAllCompanies(), employeeService.findAllArea());
         form.setWidth("25em");
-        form.addSaveListener(this::saveContact); // <1>
+        form.addSaveListener(this::saveEmployee); // <1>
         form.addDeleteListener(this::deleteEmployee); // <2>
         form.addCloseListener(e -> closeEditor()); // <3>
     }
@@ -104,8 +104,10 @@ public class EmployeeView extends VerticalLayout {
         grid.setColumns("corporateKey","firstName", "lastName", "dob");
         grid.addColumn(EmployeeDTO::getEmail)
                         .setHeader(getEnvelopeIcon());
-        grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area");
-        grid.addColumn(employee -> employee.getCompany().getName()).setHeader("Company");
+        grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area")
+                .setSortable(Boolean.TRUE);
+        grid.addColumn(employee -> employee.getCompany().getName()).setHeader("Company")
+                .setSortable(Boolean.TRUE);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event ->
