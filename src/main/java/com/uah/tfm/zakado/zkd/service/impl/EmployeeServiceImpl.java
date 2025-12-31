@@ -8,9 +8,11 @@ import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.data.repository.AreaRepository;
 import com.uah.tfm.zakado.zkd.data.repository.CompanyRepository;
 import com.uah.tfm.zakado.zkd.data.repository.EmployeeRepository;
+import com.uah.tfm.zakado.zkd.exception.EmployeeEmptyException;
 import com.uah.tfm.zakado.zkd.service.EmployeeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -21,6 +23,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -40,8 +43,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public void saveEmployee(final EmployeeDTO employeeDTO) {
         if (employeeDTO == null) {
-            System.err.println("Contact is null. Are you sure you have connected your form to the application?");
-            return;
+            String message = "You're trying to save an empty employee";
+            log.error(message);
+            throw new EmployeeEmptyException(message);
         }
 
         if(Objects.isNull(employeeDTO.getId())){
