@@ -255,6 +255,8 @@ public class EmployeeView extends VerticalLayout {
         grid.addClassNames("employee-grid");
         grid.setSizeFull();
         grid.setColumns("corporateKey", "firstName", "lastName");
+        grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area")
+                .setSortable(Boolean.TRUE);
         grid.addColumn(employee -> {
                     if (employee.getDob() != null) {
                         return employee.getDob().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -264,10 +266,8 @@ public class EmployeeView extends VerticalLayout {
                 .setSortable(true);
         grid.addColumn(EmployeeDTO::getEmail)
                 .setHeader(getEnvelopeIcon());
-        grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area")
-                .setSortable(Boolean.TRUE);
-        grid.addColumn(employee -> employee.getCompany().getName()).setHeader("Company")
-                .setSortable(Boolean.TRUE);
+        /*grid.addColumn(employee -> employee.getCompany().getName()).setHeader("Company")
+                .setSortable(Boolean.TRUE);*/
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event->{
