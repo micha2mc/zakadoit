@@ -67,23 +67,12 @@ public class EmployeeView extends VerticalLayout {
             clearForm();
             dialog.close();
         });
-
-        dialog.addOpenedChangeListener(event -> {
-            if (event.isOpened()) {
-                // Asegurar que el formulario esté listo
-                if (form == null) {
-                    createAndRefreshForm();
-                }
-            }
-        });
     }
 
     private void clearForm() {
         if (form != null) {
             EmployeeDTO emptyEmployee = new EmployeeDTO();
             form.setEmployee(emptyEmployee);
-
-            // Limpiar el binder
             form.getBinder().readBean(emptyEmployee);
         }
     }
@@ -117,35 +106,92 @@ public class EmployeeView extends VerticalLayout {
         dialog.setHeight("auto");
     }
 
+    /**
+     * Crea y muestra la tarjeta del empleado
+     */
+    private void showEmployeeCard(EmployeeDTO employee) {
+        // Crear un nuevo diálogo para la tarjeta
+        Dialog cardDialog = new Dialog();
+        cardDialog.setDraggable(true);
+        cardDialog.setResizable(false);
+        cardDialog.setCloseOnEsc(true);
+        cardDialog.setCloseOnOutsideClick(true);
+
+        // Creación de Card
+        EmployeeCard employeeCard = new EmployeeCard(employee);
+
+        //Botones de la Card
+        Button editButton = new Button("Edit", VaadinIcon.EDIT.create());
+        editButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        editButton.addClickListener(e -> {
+            cardDialog.close();
+            editEmployee(employee);
+        });
+
+        Button deleteButton = new Button("Delete", VaadinIcon.TRASH.create());
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        deleteButton.addClickListener(e -> {
+            cardDialog.close();
+            showDeleteConfirmation(employee);
+        });
+
+        Button cancelButton = new Button("Cancel", VaadinIcon.CLOSE.create());
+        cancelButton.addClickListener(e -> cardDialog.close());
+
+        // Crear layout para los botones
+        HorizontalLayout buttonsLayout = new HorizontalLayout(editButton, deleteButton, cancelButton);
+        buttonsLayout.setSpacing(true);
+        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+
+        // Layout principal con la tarjeta y botones
+        VerticalLayout cardLayout = new VerticalLayout(employeeCard, buttonsLayout);
+        cardLayout.setSpacing(true);
+        cardLayout.setPadding(true);
+        cardLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        cardDialog.add(cardLayout);
+        cardDialog.setWidth("500px");
+        cardDialog.setHeight("auto");
+        cardDialog.open();
+    }
+
 
     private void updateList() {
         grid.setItems(employeeService.findAllEmployees(filterText.getValue()));
     }
 
+
+    /**
+     * Metodo separado para mostrar confirmación de eliminación
+     */
+    private void showDeleteConfirmation(EmployeeDTO employee) {
+        ConfirmDialog confirmDialog = new ConfirmDialog();
+        confirmDialog.setHeader("Delete Employee");
+        confirmDialog.setText("Are you sure you want to delete " +
+                employee.getFirstName() + " " + employee.getLastName() + "?");
+        confirmDialog.setCancelable(true);
+        confirmDialog.setConfirmText("Delete");
+        confirmDialog.setConfirmButtonTheme("error primary");
+        confirmDialog.open();
+        confirmDialog.addConfirmListener(event -> {
+            try {
+                employeeService.deleteEmployee(employee);
+                updateList();
+                Notification.show("Employee deleted successfully",
+                                1000, Notification.Position.MIDDLE)
+                        .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            } catch (Exception e) {
+                String message = "Error deleting employee";
+                log.error(message + ": " + e.getMessage());
+                throw new EmployeeEmptyException(message);
+            }
+        });
+    }
+
     private void deleteEmployee(EmployeeDTO employee) {
         if (Objects.nonNull(employee.getId())) {
-            ConfirmDialog confirmDialog = new ConfirmDialog();
-            confirmDialog.setHeader("Delete Employee");
-            confirmDialog.setText("Are you sure you want to delete " +
-                    employee.getFirstName() + " " + employee.getLastName() + "?");
-            confirmDialog.setCancelable(true);
-            confirmDialog.setConfirmText("Delete");
-            confirmDialog.setConfirmButtonTheme("error primary");
-            confirmDialog.open();
-            confirmDialog.addConfirmListener(event -> {
-                try {
-                    employeeService.deleteEmployee(employee);
-                    updateList();
-                    dialog.close();
-                    Notification.show("Employee deleted successfully",
-                                    1000, Notification.Position.MIDDLE)
-                            .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                } catch (Exception e) {
-                    String message = "Error deleting employee";
-                    log.error(message+": " + e.getMessage());
-                    throw new EmployeeEmptyException(message);
-                }
-            });
+            showDeleteConfirmation(employee);
+            dialog.close();
         } else {
             dialog.close();
             String message = "You're trying to delete an empty employee";
@@ -164,7 +210,7 @@ public class EmployeeView extends VerticalLayout {
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             String message = "Error saving employee";
-            log.error(": " + message + e.getMessage());
+            log.error("{}: {}", message, e.getMessage());
             throw new EmployeeEmptyException(message);
         }
     }
@@ -224,8 +270,12 @@ public class EmployeeView extends VerticalLayout {
                 .setSortable(Boolean.TRUE);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.asSingleSelect().addValueChangeListener(event ->
-                editEmployee(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(event->{
+            if (event.getValue() != null) {
+                showEmployeeCard(event.getValue());
+                grid.select(null);
+            }
+        });
     }
 
     private Icon getEnvelopeIcon() {
