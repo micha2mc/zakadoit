@@ -1,7 +1,10 @@
 package com.uah.tfm.zakado.zkd.data.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area{
+public class Area {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
