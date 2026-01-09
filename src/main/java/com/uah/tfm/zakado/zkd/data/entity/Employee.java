@@ -55,4 +55,6 @@ public class Employee{
     @JoinColumn(name = "area_id", nullable = false)
     @JsonIgnoreProperties({"employees"})
     private Area area;
+
+    private String career;
 }

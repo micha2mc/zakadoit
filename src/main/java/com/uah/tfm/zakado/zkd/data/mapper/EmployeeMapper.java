@@ -25,6 +25,7 @@ public class EmployeeMapper {
                 .dob(employee.getDob())
                 .area(area)
                 .company(company)
+                .career(employee.getCareer())
                 .build();
     }
 
@@ -45,6 +46,7 @@ public class EmployeeMapper {
                 .dob(employeeDTO.getDob())
                 .area(area)
                 .company(company)
+                .career(employeeDTO.getCareer())
                 .build();
     }
 }

@@ -25,6 +25,7 @@ public class EmployeeDTO {
 
     @NotEmpty
     private String lastName;
+
     private String email;
 
     @NotNull
@@ -35,4 +36,6 @@ public class EmployeeDTO {
 
     @NotNull
     private Area area;
+
+    private String career;
 }

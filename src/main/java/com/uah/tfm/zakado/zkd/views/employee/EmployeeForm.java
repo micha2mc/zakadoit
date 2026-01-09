@@ -13,18 +13,22 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
 public class EmployeeForm extends FormLayout {
+
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
     DatePicker dob = new DatePicker("Date Of Birth");
+    TextArea career = new TextArea();
     ComboBox<Area> area = new ComboBox<>("Area");
     ComboBox<Company> company = new ComboBox<>("Company");
 
@@ -42,13 +46,28 @@ public class EmployeeForm extends FormLayout {
         company.setItemLabelGenerator(Company::getName);
         area.setItems(areas);
         area.setItemLabelGenerator(Area::getName);
-
+        configTextArea();
         add(firstName,
                 lastName,
                 dob,
                 company,
                 area,
+                career,
                 createButtonsLayout());
+    }
+
+    private void configTextArea() {
+        int charLimit = 600;
+        career.setWidthFull();
+        career.setMinHeight("100px");
+        career.setMaxHeight("150px");
+        career.setLabel("Career");
+        career.setMaxLength(charLimit);
+        career.setValueChangeMode(ValueChangeMode.EAGER);
+        career.addValueChangeListener(e -> {
+            e.getSource()
+                    .setHelperText(e.getValue().length() + "/" + charLimit);
+        });
     }
 
     private Component createButtonsLayout() {
