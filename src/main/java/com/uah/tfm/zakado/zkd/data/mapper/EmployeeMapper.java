@@ -3,19 +3,38 @@ package com.uah.tfm.zakado.zkd.data.mapper;
 import com.uah.tfm.zakado.zkd.data.entity.Area;
 import com.uah.tfm.zakado.zkd.data.entity.Company;
 import com.uah.tfm.zakado.zkd.data.entity.Employee;
+import com.uah.tfm.zakado.zkd.data.entity.Language;
 import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
+import com.uah.tfm.zakado.zkd.data.repository.AreaRepository;
+import com.uah.tfm.zakado.zkd.data.repository.CompanyRepository;
+import com.uah.tfm.zakado.zkd.data.repository.EmployeeRepository;
+import com.uah.tfm.zakado.zkd.data.repository.LanguageRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.hibernate.LazyInitializationException;
 import org.springframework.stereotype.Component;
 
-@Component
-public class EmployeeMapper {
-    public EmployeeDTO toDTO (Employee employee){
-        Area area = new Area();
-        area.setId(employee.getArea().getId());
-        area.setName(employee.getArea().getName());
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-        Company company = new Company();
-        company.setId(employee.getCompany().getId());
-        company.setName(employee.getCompany().getName());
+@Component
+@RequiredArgsConstructor
+@Transactional
+@Slf4j
+public class EmployeeMapper {
+    private final CompanyRepository companyRepository;
+    private final AreaRepository areaRepository;
+    private final LanguageRepository languageRepository;
+    private final EmployeeRepository employeeRepository;
+
+
+    public EmployeeDTO toDTO(Employee employee) {
+        Set<Language> languages =  safelyLoadLanguages(employee);
         return EmployeeDTO.builder()
                 .id(employee.getId())
                 .corporateKey(employee.getCorporateKey())
@@ -23,30 +42,118 @@ public class EmployeeMapper {
                 .lastName(employee.getLastName())
                 .email(employee.getEmail())
                 .dob(employee.getDob())
-                .area(area)
-                .company(company)
+                .area(employee.getArea())
+                .company(employee.getCompany())
                 .career(employee.getCareer())
+                .languages(languages)
                 .build();
     }
 
-    public Employee toEntity (EmployeeDTO employeeDTO){
-        Area area = new Area();
-        area.setId(employeeDTO.getArea().getId());
-        area.setName(employeeDTO.getArea().getName());
 
-        Company company = new Company();
-        company.setId(employeeDTO.getCompany().getId());
-        company.setName(employeeDTO.getCompany().getName());
-        return Employee.builder()
-                .id(employeeDTO.getId())
-                .corporateKey(employeeDTO.getCorporateKey())
-                .firstName(employeeDTO.getFirstName())
-                .lastName(employeeDTO.getLastName())
-                .email(employeeDTO.getEmail())
-                .dob(employeeDTO.getDob())
-                .area(area)
-                .company(company)
-                .career(employeeDTO.getCareer())
-                .build();
+    public Employee toEntity(EmployeeDTO employeeDTO) {
+        Employee employee;
+
+        if (employeeDTO.getId() != null) {
+            employee = employeeRepository.findById(employeeDTO.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
+
+            // Actualizar campos básicos
+            employee.setCorporateKey(employeeDTO.getCorporateKey());
+            employee.setFirstName(employeeDTO.getFirstName());
+            employee.setLastName(employeeDTO.getLastName());
+            employee.setEmail(employeeDTO.getEmail());
+            employee.setDob(employeeDTO.getDob());
+            employee.setCareer(employeeDTO.getCareer());
+        } else {
+            // Si es nuevo, crear entidad
+            employee = Employee.builder()
+                    .corporateKey(employeeDTO.getCorporateKey())
+                    .firstName(employeeDTO.getFirstName())
+                    .lastName(employeeDTO.getLastName())
+                    .email(employeeDTO.getEmail())
+                    .dob(employeeDTO.getDob())
+                    .career(employeeDTO.getCareer())
+                    .build();
+        }
+
+        // 1. Company - cargar por ID
+        if (employeeDTO.getCompany() != null && employeeDTO.getCompany().getId() != null) {
+            Company company = companyRepository.findById(employeeDTO.getCompany().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+            employee.setCompany(company);
+        } else {
+            employee.setCompany(null);
+        }
+
+        if (employeeDTO.getArea() != null && employeeDTO.getArea().getId() != null) {
+            Area area = areaRepository.findById(employeeDTO.getArea().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Area not found"));
+            employee.setArea(area);
+        }
+
+        if (employeeDTO.getLanguages() != null) {
+            Set<Long> languageIds = employeeDTO.getLanguages().stream()
+                    .map(Language::getId)
+                    .collect(Collectors.toSet());
+
+            if (!languageIds.isEmpty()) {
+                List<Language> languages = languageRepository.findAllById(languageIds);
+
+                // Verificar que todas las lenguas existen
+                if (languages.size() != languageIds.size()) {
+                    throw new EntityNotFoundException("Some languages not found");
+                }
+
+                // Si es actualización, manejar relación bidireccional
+                if (employee.getId() != null) {
+                    for (Language oldLang : employee.getLanguages()) {
+                        oldLang.getEmployees().remove(employee);
+                    }
+                    employee.getLanguages().clear();
+                }
+
+                // Establecer nuevas relaciones
+                employee.getLanguages().addAll(languages);
+
+                // Actualizar lado inverso
+                for (Language lang : languages) {
+                    lang.getEmployees().add(employee);
+                }
+            } else {
+                // Si no hay languages, limpiar
+                if (employee.getId() != null) {
+                    for (Language oldLang : employee.getLanguages()) {
+                        oldLang.getEmployees().remove(employee);
+                    }
+                    employee.getLanguages().clear();
+                }
+            }
+        }
+
+        return employee;
     }
+
+    private Set<Language> safelyLoadLanguages(Employee employee) {
+        // Opción 1: Si ya está inicializado, usarlo
+        try {
+            Set<Language> langs = employee.getLanguages();
+            // Verificar si Hibernate devuelve una colección proxy no inicializada
+            if (!Hibernate.isInitialized(langs)) {
+                return new HashSet<>(); // Colección lazy no cargada
+            }
+            return langs != null ? langs : new HashSet<>();
+
+        } catch (LazyInitializationException e) {
+            // Opción 2: Si no hay sesión, devolver vacío
+            log.debug("Lazy collection not loaded for employee {}", employee.getId());
+            return new HashSet<>();
+
+            // Opción 3: Si quieres cargarla de todas formas (solo si employee tiene ID)
+            // if (employee.getId() != null) {
+            //     return new HashSet<>(languageRepository.findByEmployeeId(employee.getId()));
+            // }
+            // return new HashSet<>();
+        }
+    }
+
 }

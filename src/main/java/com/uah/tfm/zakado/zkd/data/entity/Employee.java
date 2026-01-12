@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -16,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @Builder
-public class Employee{
+public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -42,6 +44,8 @@ public class Employee{
     @NotNull
     private LocalDate dob;
 
+    private String career;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
@@ -56,5 +60,14 @@ public class Employee{
     @JsonIgnoreProperties({"employees"})
     private Area area;
 
-    private String career;
+    @ManyToMany
+    @JoinTable(
+            name = "employee_language",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id")
+    )
+    @JsonIgnoreProperties({"employees"})
+    @Builder.Default
+    private Set<Language> languages = new HashSet<>();
+
 }

@@ -12,3 +12,9 @@ INSERT INTO "COMPANIES" (ID, NAME) VALUES
 (4, 'SANITAS'),
 (5, 'MINISTERIO DEFENSA'),
 (6, 'MUTUA MADRILEÑA');
+
+INSERT INTO "LANGUAGE" (ID, NAME, ISOCODE) VALUES
+(1, 'Español', 'ES'),
+(2, 'Francés', 'FR'),
+(3, 'Inglés', 'EN'),
+(4, 'Chino', 'ZH');

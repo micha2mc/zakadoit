@@ -3,23 +3,26 @@ package com.uah.tfm.zakado.zkd.service.impl;
 import com.uah.tfm.zakado.zkd.data.entity.Area;
 import com.uah.tfm.zakado.zkd.data.entity.Company;
 import com.uah.tfm.zakado.zkd.data.entity.Employee;
+import com.uah.tfm.zakado.zkd.data.entity.Language;
 import com.uah.tfm.zakado.zkd.data.mapper.EmployeeMapper;
 import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.data.repository.AreaRepository;
 import com.uah.tfm.zakado.zkd.data.repository.CompanyRepository;
 import com.uah.tfm.zakado.zkd.data.repository.EmployeeRepository;
+import com.uah.tfm.zakado.zkd.data.repository.LanguageRepository;
 import com.uah.tfm.zakado.zkd.exception.EmployeeEmptyException;
 import com.uah.tfm.zakado.zkd.service.EmployeeService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,18 +32,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final AreaRepository areaRepository;
     private final CompanyRepository companyRepository;
+    private final LanguageRepository languageRepository;
     private final EmployeeMapper mapper;
 
     @Transactional
     public List<EmployeeDTO> findAllEmployees(final String strFilter) {
 
+        List<Employee> employees;
         if (strFilter.isBlank()) {
-            return mapperAllEmployee(employeeRepository.findAll());
+            employees = employeeRepository.findAll();
+        } else {
+            employees = employeeRepository.searchEmployees(strFilter);
         }
-        return mapperAllEmployee(employeeRepository.searchEmployees(strFilter));
+        return employees.stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
 
+    @Transactional
     public void saveEmployee(final EmployeeDTO employeeDTO) {
         if (employeeDTO == null) {
             String message = "You're trying to save an empty employee";
@@ -48,34 +58,53 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeEmptyException(message);
         }
 
-        if(Objects.isNull(employeeDTO.getId())){
+        if (Objects.isNull(employeeDTO.getId())) {
             employeeDTO.setCorporateKey(generateCorporateKey());
         }
         employeeDTO.setEmail(generateEmail(employeeDTO));
-        employeeRepository.save(mapper.toEntity(employeeDTO));
+        Employee employee = mapper.toEntity(employeeDTO);
+        Employee save = employeeRepository.save(employee);
+        if(Objects.nonNull(save)){
+            employeeDTO.setId(save.getId());
+        }
     }
 
     @Transactional
     public void deleteEmployee(final EmployeeDTO employeeDTO) {
-        employeeRepository.delete(mapper.toEntity(employeeDTO));
+        if (employeeDTO == null || employeeDTO.getId() == null) {
+            throw new EmployeeEmptyException("Cannot delete employee without ID");
+        }
+        Employee employee = employeeRepository
+                .findById(employeeDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Employee not found"));
+        for (Language language : employee.getLanguages()) {
+            language.getEmployees().remove(employee);
+        }
+        employeeRepository.delete(employee);
     }
 
     @Override
+    @Transactional
     public List<Company> findAllCompanies() {
         return companyRepository.findAll();
     }
 
     @Override
+    @Transactional
     public List<Area> findAllArea() {
         return areaRepository.findAll();
     }
 
-    private List<EmployeeDTO> mapperAllEmployee(final List<Employee> allEmployee) {
-        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        for (Employee employee : allEmployee) {
-            employeeDTOList.add(mapper.toDTO(employee));
-        }
-        return employeeDTOList;
+    @Override
+    @Transactional
+    public List<Language> findAllLanguages() {
+        return languageRepository.findAll();
+    }
+
+    @Override
+    public EmployeeDTO getEmployeeWithRelations(Long id) {
+        return employeeRepository.findWithAllRelationsById(id)
+                .map(mapper::toDTO)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
     }
 
     private String generateEmail(final EmployeeDTO employeeDTO) {

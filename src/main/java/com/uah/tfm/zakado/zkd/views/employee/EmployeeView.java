@@ -1,5 +1,6 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
+import com.uah.tfm.zakado.zkd.data.entity.Language;
 import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.exception.EmployeeEmptyException;
 import com.uah.tfm.zakado.zkd.service.EmployeeService;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 @SpringComponent
@@ -85,7 +87,8 @@ public class EmployeeView extends VerticalLayout {
         // Crear nuevo formulario
         form = new EmployeeForm(
                 employeeService.findAllCompanies(),
-                employeeService.findAllArea()
+                employeeService.findAllArea(),
+                employeeService.findAllLanguages()
         );
 
         // Configuración de los listeners de los botones
@@ -106,54 +109,7 @@ public class EmployeeView extends VerticalLayout {
         dialog.setHeight("auto");
     }
 
-    /**
-     * Crea y muestra la tarjeta del empleado
-     */
-    private void showEmployeeCard(EmployeeDTO employee) {
-        // Crear un nuevo diálogo para la tarjeta
-        Dialog cardDialog = new Dialog();
-        cardDialog.setDraggable(true);
-        cardDialog.setResizable(false);
-        cardDialog.setCloseOnEsc(true);
-        cardDialog.setCloseOnOutsideClick(true);
 
-        // Creación de Card
-        EmployeeCard employeeCard = new EmployeeCard(employee);
-
-        //Botones de la Card
-        Button editButton = new Button("Edit", VaadinIcon.EDIT.create());
-        editButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        editButton.addClickListener(e -> {
-            cardDialog.close();
-            editEmployee(employee);
-        });
-
-        Button deleteButton = new Button("Delete", VaadinIcon.TRASH.create());
-        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        deleteButton.addClickListener(e -> {
-            cardDialog.close();
-            showDeleteConfirmation(employee);
-        });
-
-        Button cancelButton = new Button("Cancel", VaadinIcon.CLOSE.create());
-        cancelButton.addClickListener(e -> cardDialog.close());
-
-        // Crear layout para los botones
-        HorizontalLayout buttonsLayout = new HorizontalLayout(editButton, deleteButton, cancelButton);
-        buttonsLayout.setSpacing(true);
-        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-
-        // Layout principal con la tarjeta y botones
-        VerticalLayout cardLayout = new VerticalLayout(employeeCard, buttonsLayout);
-        cardLayout.setSpacing(true);
-        cardLayout.setPadding(true);
-        cardLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        cardDialog.add(cardLayout);
-        cardDialog.setWidth("500px");
-        cardDialog.setHeight("auto");
-        cardDialog.open();
-    }
 
 
     private void updateList() {
@@ -242,8 +198,14 @@ public class EmployeeView extends VerticalLayout {
             if (form == null) {
                 createAndRefreshForm();
             }
-            form.getBinder().readBean(null);
-            form.setEmployee(employee);
+            EmployeeDTO fullEmployee = employeeService.getEmployeeWithRelations(employee.getId());
+            if (Objects.nonNull(fullEmployee)) {
+                form.setEmployee(fullEmployee);
+                form.getBinder().readBean(fullEmployee);
+            } else {
+                form.setEmployee(employee);
+                form.getBinder().readBean(employee);
+            }
             dialog.open();
         }
     }
@@ -266,16 +228,65 @@ public class EmployeeView extends VerticalLayout {
                 .setSortable(true);
         grid.addColumn(EmployeeDTO::getEmail)
                 .setHeader(getEnvelopeIcon());
-        /*grid.addColumn(employee -> employee.getCompany().getName()).setHeader("Company")
-                .setSortable(Boolean.TRUE);*/
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.asSingleSelect().addValueChangeListener(event->{
+        grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
                 showEmployeeCard(event.getValue());
                 grid.select(null);
             }
         });
+    }
+
+    /**
+     * Crea y muestra la tarjeta del empleado
+     */
+    private void showEmployeeCard(EmployeeDTO employee) {
+        EmployeeDTO fullEmployee = employeeService.getEmployeeWithRelations(employee.getId());
+        List<Language> allLanguages = employeeService.findAllLanguages();
+        // Crear un nuevo diálogo para la tarjeta
+        Dialog cardDialog = new Dialog();
+        cardDialog.setDraggable(true);
+        cardDialog.setResizable(false);
+        cardDialog.setCloseOnEsc(true);
+        cardDialog.setCloseOnOutsideClick(true);
+
+        // Creación de Card
+        EmployeeCard employeeCard = new EmployeeCard(fullEmployee, allLanguages);
+
+        //Botones de la Card
+        Button editButton = new Button("Edit", VaadinIcon.EDIT.create());
+        editButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        editButton.addClickListener(e -> {
+            cardDialog.close();
+            editEmployee(fullEmployee);
+        });
+
+        Button deleteButton = new Button("Delete", VaadinIcon.TRASH.create());
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        deleteButton.addClickListener(e -> {
+            cardDialog.close();
+            showDeleteConfirmation(fullEmployee);
+        });
+
+        Button cancelButton = new Button("Cancel", VaadinIcon.CLOSE.create());
+        cancelButton.addClickListener(e -> cardDialog.close());
+
+        // Crear layout para los botones
+        HorizontalLayout buttonsLayout = new HorizontalLayout(editButton, deleteButton, cancelButton);
+        buttonsLayout.setSpacing(true);
+        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+
+        // Layout principal con la tarjeta y botones
+        VerticalLayout cardLayout = new VerticalLayout(employeeCard, buttonsLayout);
+        cardLayout.setSpacing(true);
+        cardLayout.setPadding(true);
+        cardLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        cardDialog.add(cardLayout);
+        cardDialog.setWidth("500px");
+        cardDialog.setHeight("auto");
+        cardDialog.open();
     }
 
     private Icon getEnvelopeIcon() {

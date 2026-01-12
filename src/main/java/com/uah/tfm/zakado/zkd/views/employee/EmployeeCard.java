@@ -1,27 +1,36 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
+import com.uah.tfm.zakado.zkd.data.entity.Language;
 import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import org.springframework.util.StringUtils;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EmployeeCard extends VerticalLayout {
 
     private final EmployeeDTO employeeDTO;
+    private final List<Language> allLanguages;
 
-    public EmployeeCard(EmployeeDTO employeeDTO) {
+    public EmployeeCard(EmployeeDTO employeeDTO, List<Language> allLanguages) {
         this.employeeDTO = employeeDTO;
+        this.allLanguages = allLanguages;
         addClassName("employee-detail-card");
         setPadding(true);
         setSpacing(true);
@@ -78,11 +87,106 @@ public class EmployeeCard extends VerticalLayout {
         if (Objects.nonNull(employeeDTO.getCompany()) && employeeDTO.getCompany().getName() != null) {
             content.add(createInfoRow(VaadinIcon.OFFICE, employeeDTO.getCompany().getName()));
         }
-        if(StringUtils.hasText(employeeDTO.getCareer())){
+        if (Objects.nonNull(employeeDTO.getLanguages())) {
+            content.add(createLanguagesSection(employeeDTO.getLanguages()));
+        } else {
+            content.add(createNoLanguagesMessage());
+        }
+        if (StringUtils.hasText(employeeDTO.getCareer())) {
             content.add(createCareerSection(employeeDTO.getCareer()));
         }
 
         return content;
+    }
+
+    private Component createLanguagesSection(Set<Language> languages) {
+        // Convertir Set a List para ordenarlos alfabéticamente
+        List<Language> sortedAllLanguages = this.allLanguages.stream()
+                .sorted(Comparator.comparing(Language::getName))
+                .collect(Collectors.toList());
+        Set<Long> employeeLanguageIds = languages != null ?
+                languages.stream()
+                        .map(Language::getId)
+                        .collect(Collectors.toSet()) :
+                Collections.emptySet();
+
+        Grid<Language> grid = new Grid<>();
+        grid.setItems(sortedAllLanguages);
+        grid.setAllRowsVisible(true);
+        //grid.setHeightByRows(true);
+        grid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER);
+        grid.getStyle()
+                .set("border", "1px solid var(--lumo-contrast-10pct)")
+                .set("border-radius", "var(--lumo-border-radius-m)")
+                .set("background", "var(--lumo-base-color)");
+
+        // Columna de nombre del idioma
+        grid.addColumn(new ComponentRenderer<>(language -> {
+                    Span name = new Span(language.getName());
+                    name.getStyle()
+                            .set("font-weight", "500")
+                            .set("color", "var(--lumo-body-text-color)");
+                    return name;
+                })).setHeader("Idioma")
+                .setAutoWidth(true)
+                .setFlexGrow(1);
+
+        // Columna de código ISO
+        grid.addColumn(new ComponentRenderer<>(language -> {
+                    Span code = new Span(language.getIsocode());
+                    code.getStyle()
+                            .set("font-size", "var(--lumo-font-size-xs)")
+                            .set("color", "var(--lumo-secondary-text-color)")
+                            .set("background", "var(--lumo-contrast-5pct)")
+                            .set("padding", "2px 8px")
+                            .set("border-radius", "var(--lumo-border-radius-s)");
+                    return code;
+                })).setHeader("Código")
+                .setWidth("80px")
+                .setTextAlign(ColumnTextAlign.CENTER);
+
+        // Columna con icono de verificación (opcional)
+        grid.addColumn(new ComponentRenderer<>(language -> {
+                    boolean hasLanguage = employeeLanguageIds.contains(language.getId());
+                    Icon statusIcon;
+                    if (hasLanguage) {
+                        statusIcon = VaadinIcon.CHECK.create();
+                        statusIcon.getStyle()
+                                .set("color", "var(--lumo-success-color)");
+
+                    } else {
+                        statusIcon = VaadinIcon.CLOSE_SMALL.create();
+                        statusIcon.getStyle()
+                                .set("color", "var(--lumo-error-color)");
+                    }
+                    statusIcon.setSize("var(--lumo-icon-size-s)");
+
+
+                    HorizontalLayout layout = new HorizontalLayout(statusIcon);
+                    layout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+                    layout.setAlignItems(FlexComponent.Alignment.CENTER);
+                    return layout;
+                })).setHeader("")
+                .setWidth("60px")
+                .setFlexGrow(0);
+
+        return grid;
+    }
+
+    private Component createNoLanguagesMessage() {
+        HorizontalLayout messageLayout = new HorizontalLayout(
+                VaadinIcon.GLOBE.create(),
+                new Span("No registra idiomas")
+        );
+        messageLayout.setSpacing(true);
+        messageLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        messageLayout.getStyle()
+                .set("color", "var(--lumo-disabled-text-color)")
+                .set("font-size", "var(--lumo-font-size-s)")
+                .set("font-style", "italic")
+                .set("margin-top", "var(--lumo-space-s)");
+
+        return messageLayout;
     }
 
     private Component createCareerSection(final String career) {

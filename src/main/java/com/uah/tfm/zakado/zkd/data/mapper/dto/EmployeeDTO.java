@@ -2,6 +2,7 @@ package com.uah.tfm.zakado.zkd.data.mapper.dto;
 
 import com.uah.tfm.zakado.zkd.data.entity.Area;
 import com.uah.tfm.zakado.zkd.data.entity.Company;
+import com.uah.tfm.zakado.zkd.data.entity.Language;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -38,4 +41,6 @@ public class EmployeeDTO {
     private Area area;
 
     private String career;
+
+    private Set<Language> languages = new HashSet<>();
 }
