@@ -25,7 +25,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -219,15 +218,6 @@ public class EmployeeView extends VerticalLayout {
         grid.setColumns("corporateKey", "firstName", "lastName");
         grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area")
                 .setSortable(Boolean.TRUE);
-        grid.addColumn(employee -> {
-                    if (employee.getDob() != null) {
-                        return employee.getDob().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    }
-                    return "";
-                }).setHeader("Date of Birth")
-                .setSortable(true);
-        grid.addColumn(EmployeeDTO::getEmail)
-                .setHeader(getEnvelopeIcon());
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event -> {
