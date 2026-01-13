@@ -109,8 +109,6 @@ public class EmployeeView extends VerticalLayout {
     }
 
 
-
-
     private void updateList() {
         grid.setItems(employeeService.findAllEmployees(filterText.getValue()));
     }
@@ -193,20 +191,8 @@ public class EmployeeView extends VerticalLayout {
     }
 
     private void editEmployee(final EmployeeDTO employee) {
-        if (employee != null) {
-            /*if (form == null) {
-                createAndRefreshForm();
-            }*/
-            EmployeeDTO fullEmployee = employeeService.getEmployeeWithRelations(employee.getId());
-            if (Objects.nonNull(fullEmployee)) {
-                form.setEmployee(fullEmployee);
-                form.getBinder().readBean(fullEmployee);
-            } else {
-                form.setEmployee(employee);
-                form.getBinder().readBean(employee);
-            }
-            dialog.open();
-        }
+        form.setEmployee(employee);
+        dialog.open();
     }
 
     /**
