@@ -17,6 +17,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -35,15 +36,13 @@ public class EmployeeForm extends FormLayout {
     TextField lastName = new TextField("Last name");
     DatePicker dob = new DatePicker("Date Of Birth");
     TextArea career = new TextArea();
-    ComboBox<Area> area = new ComboBox<>("Area");
+    RadioButtonGroup<Area> area = new RadioButtonGroup<>("Area");
     ComboBox<Company> company = new ComboBox<>("Company");
+    CheckboxGroup<Language> languageCheckboxGroup;
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
-
-    //LanguageSelection languageSelection;
-    private CheckboxGroup<Language> languageCheckboxGroup;
 
     Binder<EmployeeDTO> binder = new BeanValidationBinder<>(EmployeeDTO.class);
 
@@ -61,6 +60,7 @@ public class EmployeeForm extends FormLayout {
         languageCheckboxGroup.setItems(languages);
         languageCheckboxGroup.setItemLabelGenerator(Language::getName);
         languageCheckboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
+
         binder.forField(languageCheckboxGroup)
                 .bind(EmployeeDTO::getLanguages, EmployeeDTO::setLanguages);
 

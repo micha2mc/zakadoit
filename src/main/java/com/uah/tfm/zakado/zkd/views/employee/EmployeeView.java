@@ -194,9 +194,9 @@ public class EmployeeView extends VerticalLayout {
 
     private void editEmployee(final EmployeeDTO employee) {
         if (employee != null) {
-            if (form == null) {
+            /*if (form == null) {
                 createAndRefreshForm();
-            }
+            }*/
             EmployeeDTO fullEmployee = employeeService.getEmployeeWithRelations(employee.getId());
             if (Objects.nonNull(fullEmployee)) {
                 form.setEmployee(fullEmployee);
