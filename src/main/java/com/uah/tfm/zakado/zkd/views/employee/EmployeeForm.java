@@ -31,6 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Slf4j
@@ -59,6 +61,11 @@ public class EmployeeForm extends FormLayout {
         configRadioButtonGroup(areas);
         configCheckboxGroup(languages);
         configTextArea();
+
+        binder.forField(company).bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
+        binder.forField(area).bind(EmployeeDTO::getArea, EmployeeDTO::setArea);
+        binder.forField(languageCheckboxGroup)
+                .bind(EmployeeDTO::getLanguages, EmployeeDTO::setLanguages);
 
         binder.bindInstanceFields(this);
 
@@ -148,22 +155,39 @@ public class EmployeeForm extends FormLayout {
 
 
     public void setEmployee(EmployeeDTO employee) {
+        binder.setBean(employee);
+        if (employee.getArea() != null) {
+            Area areaToSelect = area.getListDataView()
+                    .getItems()
+                    .filter(a -> a.getId().equals(employee.getArea().getId()))
+                    .findFirst()
+                    .orElse(null);
+            area.setValue(areaToSelect);
+        } else {
+            area.clear();
+        }
+
         if (employee.getLanguages() != null && !employee.getLanguages().isEmpty()) {
-            languageCheckboxGroup.setValue(employee.getLanguages());
+            Set<Language> languagesToSelect = languageCheckboxGroup.getListDataView()
+                    .getItems()
+                    .filter(lang -> employee.getLanguages().stream()
+                            .anyMatch(empLang -> empLang.getId().equals(lang.getId())))
+                    .collect(Collectors.toSet());
+            languageCheckboxGroup.setValue(languagesToSelect);
         } else {
             languageCheckboxGroup.clear();
         }
 
-        // Asegurarse de que los otros campos también se establezcan
         if (employee.getCompany() != null) {
-            company.setValue(employee.getCompany());
+            Company companyToSelect = company.getListDataView()
+                    .getItems()
+                    .filter(c -> c.getId().equals(employee.getCompany().getId()))
+                    .findFirst()
+                    .orElse(null);
+            company.setValue(companyToSelect);
+        } else {
+            company.clear();
         }
-
-        if (employee.getArea() != null) {
-            area.setValue(employee.getArea());
-        }
-        binder.setBean(employee);
-        //binder.readBean(employee);
 
     }
 

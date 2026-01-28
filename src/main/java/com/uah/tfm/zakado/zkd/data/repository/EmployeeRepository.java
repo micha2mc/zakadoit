@@ -29,9 +29,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT DISTINCT e FROM Employee e " +
             "LEFT JOIN FETCH e.company " +
             "LEFT JOIN FETCH e.area " +
-            "WHERE LOWER(e.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
-            "OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
-            "OR e.corporateKey LIKE CONCAT('%', :searchTerm, '%')")
+            "WHERE LOWER(e.firstName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+            "OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+            "OR e.corporateKey LIKE CONCAT('%', :filter, '%')")
     List<Employee> searchEmployees(@Param("filter") String searchTerm);
     @Override
     @EntityGraph(attributePaths = {"company", "area"})
