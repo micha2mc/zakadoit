@@ -11,21 +11,13 @@ import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    /*@Query("""
-            select e from Employee e 
-            where lower(e.firstName) like lower(concat('%', :searchTerm, '%')) 
-            or lower(e.lastName) like lower(concat('%', :searchTerm, '%'))
-            or lower(e.corporateKey) like lower(concat('%', :searchTerm, '%'))
-            """)
-    List<Employee> searchEmployees(@Param("searchTerm") String searchTerm);*/
-
     @Query(""" 
             select e from Employee e 
             where e.corporateKey = :ck
             """)
     Employee findEmployeeByCK(String ck);
 
-    // Usar JOIN FETCH para cargar relaciones en una sola query
+
     @Query("SELECT DISTINCT e FROM Employee e " +
             "LEFT JOIN FETCH e.company " +
             "LEFT JOIN FETCH e.area " +
@@ -33,8 +25,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             "OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
             "OR e.corporateKey LIKE CONCAT('%', :filter, '%')")
     List<Employee> searchEmployees(@Param("filter") String searchTerm);
-    @Override
+
     @EntityGraph(attributePaths = {"company", "area"})
+    @Override
     List<Employee> findAll();
 
     @EntityGraph(attributePaths = {"company", "area", "languages"})

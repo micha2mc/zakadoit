@@ -38,14 +38,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EmployeeForm extends FormLayout {
 
-    TextArea career;
-    RadioButtonGroup<Area> area;
-    ComboBox<Company> company;
-    CheckboxGroup<Language> languageCheckboxGroup;
-
-    TextField firstName = new TextField("First name");
-    TextField lastName = new TextField("Last name");
-    DatePicker dob = new DatePicker("Date Of Birth");
+    private TextArea career;
+    private RadioButtonGroup<Area> area;
+    private ComboBox<Company> company;
+    private CheckboxGroup<Language> languageCheckboxGroup;
+    private final TextField firstName = new TextField("First name");
+    private final TextField lastName = new TextField("Last name");
+    private final DatePicker dob = new DatePicker("Date Of Birth");
 
 
     Button save = new Button("Save");

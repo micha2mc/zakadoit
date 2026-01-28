@@ -15,6 +15,7 @@ public interface EmployeeService {
     void deleteEmployee(final EmployeeDTO employee);
 
     List<Company> findAllCompanies();
+
     List<Area> findAllArea();
 
     List<Language> findAllLanguages();

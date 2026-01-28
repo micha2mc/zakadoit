@@ -34,11 +34,12 @@ import java.util.Objects;
 @Slf4j
 public class EmployeeView extends VerticalLayout {
 
-    private final Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
-    private final TextField filterText = new TextField();
-    private final EmployeeService employeeService;
-    private EmployeeForm form;
     private Dialog dialog;
+    private EmployeeForm form;
+    private final TextField filterText = new TextField();
+    private final Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
+
+    private EmployeeService employeeService;
 
 
     public EmployeeView(final EmployeeService employeeService) {
@@ -79,7 +80,7 @@ public class EmployeeView extends VerticalLayout {
     }
 
     private void createAndRefreshForm() {
-        if (form != null) {
+        if (Objects.nonNull(form)) {
             dialog.remove(form);
         }
 

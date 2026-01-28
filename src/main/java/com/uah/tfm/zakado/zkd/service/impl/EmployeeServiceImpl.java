@@ -24,9 +24,9 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -62,18 +62,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeDTO.setCorporateKey(generateCorporateKey());
         }
         employeeDTO.setEmail(generateEmail(employeeDTO));
-        Employee employee = mapper.toEntity(employeeDTO);
-        Employee save = employeeRepository.save(employee);
-        if(Objects.nonNull(save)){
-            employeeDTO.setId(save.getId());
-        }
+        employeeRepository.save(mapper.toEntity(employeeDTO));
     }
 
     @Transactional
     public void deleteEmployee(final EmployeeDTO employeeDTO) {
-        if (employeeDTO == null || employeeDTO.getId() == null) {
-            throw new EmployeeEmptyException("Cannot delete employee without ID");
-        }
+
         Employee employee = employeeRepository
                 .findById(employeeDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Employee not found"));
         for (Language language : employee.getLanguages()) {
