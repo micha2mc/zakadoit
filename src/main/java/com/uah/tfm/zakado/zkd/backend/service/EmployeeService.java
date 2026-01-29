@@ -1,9 +1,9 @@
-package com.uah.tfm.zakado.zkd.service;
+package com.uah.tfm.zakado.zkd.backend.service;
 
-import com.uah.tfm.zakado.zkd.data.entity.Area;
-import com.uah.tfm.zakado.zkd.data.entity.Company;
-import com.uah.tfm.zakado.zkd.data.entity.Language;
-import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Area;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Company;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 
 import java.util.List;
 

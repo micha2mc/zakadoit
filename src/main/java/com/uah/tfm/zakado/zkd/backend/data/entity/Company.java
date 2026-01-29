@@ -1,6 +1,7 @@
-package com.uah.tfm.zakado.zkd.data.entity;
+package com.uah.tfm.zakado.zkd.backend.data.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,19 +11,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
+@Table(name = "companies")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "idgenerator_area")
+            generator = "idgenerator_company")
     private Long id;
 
+    @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Employee> employees = new LinkedList<>();
+
 }

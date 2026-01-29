@@ -1,4 +1,4 @@
-package com.uah.tfm.zakado.zkd.data.entity;
+package com.uah.tfm.zakado.zkd.backend.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

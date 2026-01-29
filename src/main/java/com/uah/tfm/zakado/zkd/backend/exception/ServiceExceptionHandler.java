@@ -1,4 +1,4 @@
-package com.uah.tfm.zakado.zkd.exception;
+package com.uah.tfm.zakado.zkd.backend.exception;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;

@@ -1,8 +1,8 @@
-package com.uah.tfm.zakado.zkd.data.mapper.dto;
+package com.uah.tfm.zakado.zkd.backend.data.mapper.dto;
 
-import com.uah.tfm.zakado.zkd.data.entity.Area;
-import com.uah.tfm.zakado.zkd.data.entity.Company;
-import com.uah.tfm.zakado.zkd.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Area;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Company;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

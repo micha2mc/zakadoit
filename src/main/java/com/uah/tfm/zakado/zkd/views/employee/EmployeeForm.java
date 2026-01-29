@@ -1,9 +1,9 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
-import com.uah.tfm.zakado.zkd.data.entity.Area;
-import com.uah.tfm.zakado.zkd.data.entity.Company;
-import com.uah.tfm.zakado.zkd.data.entity.Language;
-import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Area;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Company;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -138,11 +138,6 @@ public class EmployeeForm extends FormLayout {
                     employee = new EmployeeDTO();
                 }
                 binder.writeBean(employee);
-                // Verificar que los datos se hayan escrito correctamente
-                if (employee.getLanguages() == null || employee.getLanguages().isEmpty()) {
-                    // Si los idiomas están vacíos, asignar los del checkbox
-                    employee.setLanguages(languageCheckboxGroup.getSelectedItems());
-                }
                 fireEvent(new SaveEvent(this, employee));
             } catch (ValidationException e) {
                 // Manejar error de validación
@@ -153,9 +148,9 @@ public class EmployeeForm extends FormLayout {
     }
 
 
-    public void setEmployee(EmployeeDTO employee) {
+    public void setEmployee(final EmployeeDTO employee) {
         binder.setBean(employee);
-        if (employee.getArea() != null) {
+        if (Objects.nonNull(employee.getArea())) {
             Area areaToSelect = area.getListDataView()
                     .getItems()
                     .filter(a -> a.getId().equals(employee.getArea().getId()))
@@ -166,7 +161,7 @@ public class EmployeeForm extends FormLayout {
             area.clear();
         }
 
-        if (employee.getLanguages() != null && !employee.getLanguages().isEmpty()) {
+        if (Objects.nonNull(employee.getLanguages())) {
             Set<Language> languagesToSelect = languageCheckboxGroup.getListDataView()
                     .getItems()
                     .filter(lang -> employee.getLanguages().stream()
@@ -177,7 +172,7 @@ public class EmployeeForm extends FormLayout {
             languageCheckboxGroup.clear();
         }
 
-        if (employee.getCompany() != null) {
+        if (Objects.nonNull(employee.getCompany())) {
             Company companyToSelect = company.getListDataView()
                     .getItems()
                     .filter(c -> c.getId().equals(employee.getCompany().getId()))
@@ -187,7 +182,6 @@ public class EmployeeForm extends FormLayout {
         } else {
             company.clear();
         }
-
     }
 
     // Events

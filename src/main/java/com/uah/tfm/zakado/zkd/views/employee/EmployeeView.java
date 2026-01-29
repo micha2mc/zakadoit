@@ -1,9 +1,9 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
-import com.uah.tfm.zakado.zkd.data.entity.Language;
-import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
-import com.uah.tfm.zakado.zkd.exception.EmployeeEmptyException;
-import com.uah.tfm.zakado.zkd.service.EmployeeService;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
+import com.uah.tfm.zakado.zkd.backend.exception.EmployeeEmptyException;
+import com.uah.tfm.zakado.zkd.backend.service.EmployeeService;
 import com.uah.tfm.zakado.zkd.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -11,7 +11,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -92,13 +91,9 @@ public class EmployeeView extends VerticalLayout {
         );
 
         // Configuración de los listeners de los botones
-        form.addSaveListener(event -> {
-            saveEmployee(event.getEmployee());
-        });
+        form.addSaveListener(event ->saveEmployee(event.getEmployee()));
 
-        form.addDeleteListener(event -> {
-            deleteEmployee(event.getEmployee());
-        });
+        form.addDeleteListener(event -> deleteEmployee(event.getEmployee()));
 
         form.addCloseListener(event -> {
             clearForm();
@@ -118,7 +113,7 @@ public class EmployeeView extends VerticalLayout {
     /**
      * Metodo separado para mostrar confirmación de eliminación
      */
-    private void showDeleteConfirmation(EmployeeDTO employee) {
+    private void showDeleteConfirmation(final EmployeeDTO employee) {
         ConfirmDialog confirmDialog = new ConfirmDialog();
         confirmDialog.setHeader("Delete Employee");
         confirmDialog.setText("Are you sure you want to delete " +
@@ -136,13 +131,13 @@ public class EmployeeView extends VerticalLayout {
                         .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             } catch (Exception e) {
                 String message = "Error deleting employee";
-                log.error(message + ": " + e.getMessage());
+                log.error("{}: {}", message, e.getMessage());
                 throw new EmployeeEmptyException(message);
             }
         });
     }
 
-    private void deleteEmployee(EmployeeDTO employee) {
+    private void deleteEmployee(final EmployeeDTO employee) {
         if (Objects.nonNull(employee.getId())) {
             showDeleteConfirmation(employee);
             dialog.close();
@@ -154,7 +149,7 @@ public class EmployeeView extends VerticalLayout {
         }
     }
 
-    private void saveEmployee(EmployeeDTO employee) {
+    private void saveEmployee(final EmployeeDTO employee) {
         try {
             employeeService.saveEmployee(employee);
             updateList();
@@ -197,7 +192,7 @@ public class EmployeeView extends VerticalLayout {
     }
 
     /**
-     * Configuración del grid
+     * Configuración del grid principal
      */
     private void configureGrid() {
         grid.addClassNames("employee-grid");
@@ -208,7 +203,7 @@ public class EmployeeView extends VerticalLayout {
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event -> {
-            if (event.getValue() != null) {
+            if (Objects.nonNull(event.getValue())) {
                 showEmployeeCard(event.getValue());
                 grid.select(null);
             }
@@ -218,7 +213,7 @@ public class EmployeeView extends VerticalLayout {
     /**
      * Crea y muestra la tarjeta del empleado
      */
-    private void showEmployeeCard(EmployeeDTO employee) {
+    private void showEmployeeCard(final EmployeeDTO employee) {
         EmployeeDTO fullEmployee = employeeService.getEmployeeWithRelations(employee.getId());
         List<Language> allLanguages = employeeService.findAllLanguages();
         // Crear un nuevo diálogo para la tarjeta
@@ -264,12 +259,5 @@ public class EmployeeView extends VerticalLayout {
         cardDialog.setWidth("500px");
         cardDialog.setHeight("auto");
         cardDialog.open();
-    }
-
-    private Icon getEnvelopeIcon() {
-        Icon emailIcon = VaadinIcon.ENVELOPE.create();
-        emailIcon.setColor("var(--lumo-primary-color)");
-        emailIcon.setSize("16px");
-        return emailIcon;
     }
 }

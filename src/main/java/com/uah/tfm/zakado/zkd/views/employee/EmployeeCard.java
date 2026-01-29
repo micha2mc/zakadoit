@@ -1,7 +1,7 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
-import com.uah.tfm.zakado.zkd.data.entity.Language;
-import com.uah.tfm.zakado.zkd.data.mapper.dto.EmployeeDTO;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -34,14 +34,12 @@ public class EmployeeCard extends VerticalLayout {
         addClassName("employee-detail-card");
         setPadding(true);
         setSpacing(true);
-        //setWidth("400px");
         setAlignItems(FlexComponent.Alignment.CENTER);
 
         createCardContent();
     }
 
     private void createCardContent() {
-        // Header con avatar y nombre
         VerticalLayout headerLayout = createHeader();
         VerticalLayout content = createContent();
         add(headerLayout, content);
@@ -127,7 +125,7 @@ public class EmployeeCard extends VerticalLayout {
                             .set("font-weight", "500")
                             .set("color", "var(--lumo-body-text-color)");
                     return name;
-                })).setHeader("Idioma")
+                })).setHeader("Languages")
                 .setAutoWidth(true)
                 .setFlexGrow(1);
 
@@ -141,7 +139,7 @@ public class EmployeeCard extends VerticalLayout {
                             .set("padding", "2px 8px")
                             .set("border-radius", "var(--lumo-border-radius-s)");
                     return code;
-                })).setHeader("Código")
+                })).setHeader("ISO")
                 .setWidth("80px")
                 .setTextAlign(ColumnTextAlign.CENTER);
 

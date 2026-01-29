@@ -1,6 +1,6 @@
-package com.uah.tfm.zakado.zkd.data.repository;
+package com.uah.tfm.zakado.zkd.backend.data.repository;
 
-import com.uah.tfm.zakado.zkd.data.entity.Employee;
+import com.uah.tfm.zakado.zkd.backend.data.entity.Employee;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
