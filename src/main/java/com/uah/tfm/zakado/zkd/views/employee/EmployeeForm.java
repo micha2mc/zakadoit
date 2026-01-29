@@ -16,9 +16,11 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -38,6 +40,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EmployeeForm extends FormLayout {
 
+    private final static  String EMAIL_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
     private TextArea career;
     private RadioButtonGroup<Area> area;
     private ComboBox<Company> company;
@@ -45,6 +49,7 @@ public class EmployeeForm extends FormLayout {
     private final TextField firstName = new TextField("First name");
     private final TextField lastName = new TextField("Last name");
     private final DatePicker dob = new DatePicker("Date Of Birth");
+    private final EmailField email = new EmailField("Email address");
 
 
     Button save = new Button("Save");
@@ -56,10 +61,11 @@ public class EmployeeForm extends FormLayout {
     public EmployeeForm(List<Company> companies, List<Area> areas, List<Language> languages) {
         addClassName("employee-form");
 
-        configCombobox(companies);
+        configComboBox(companies);
         configRadioButtonGroup(areas);
         configCheckboxGroup(languages);
         configTextArea();
+        configEmailField();
 
         binder.forField(company)
                 .bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
@@ -70,12 +76,21 @@ public class EmployeeForm extends FormLayout {
 
         binder.bindInstanceFields(this);
 
-
-        add(firstName, lastName, dob, company, area, career, languageCheckboxGroup, createButtonsLayout());
+        add(firstName, lastName, email, dob, company, area, career, languageCheckboxGroup, createButtonsLayout());
 
     }
 
-    private void configCombobox(List<Company> companies) {
+    private void configEmailField() {
+        email.setPrefixComponent(VaadinIcon.ENVELOPE.create());
+        email.setRequiredIndicatorVisible(true);
+        email.setPattern(EMAIL_PATTERN);
+        email.setI18n(new EmailField.EmailFieldI18n()
+                .setRequiredErrorMessage("Field is required")
+                .setPatternErrorMessage(
+                        "Enter a valid email address, example: myemail@dominio.com"));
+    }
+
+    private void configComboBox(List<Company> companies) {
         company = new ComboBox<>("Company");
         company.setItems(companies);
         company.setItemLabelGenerator(Company::getName);

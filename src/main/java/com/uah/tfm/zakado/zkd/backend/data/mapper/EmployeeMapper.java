@@ -61,7 +61,7 @@ public class EmployeeMapper {
             employee.setCorporateKey(employeeDTO.getCorporateKey());
             employee.setFirstName(employeeDTO.getFirstName());
             employee.setLastName(employeeDTO.getLastName());
-            employee.setEmail(employeeDTO.getEmail());
+            employee.setEmail(employeeDTO.getEmail().toUpperCase());
             employee.setDob(employeeDTO.getDob());
             employee.setCareer(employeeDTO.getCareer());
         } else {
@@ -144,15 +144,8 @@ public class EmployeeMapper {
             return langs != null ? langs : new HashSet<>();
 
         } catch (LazyInitializationException e) {
-            // Opción 2: Si no hay sesión, devolver vacío
             log.debug("Lazy collection not loaded for employee {}", employee.getId());
             return new HashSet<>();
-
-            // Opción 3: Si quieres cargarla de todas formas (solo si employee tiene ID)
-            // if (employee.getId() != null) {
-            //     return new HashSet<>(languageRepository.findByEmployeeId(employee.getId()));
-            // }
-            // return new HashSet<>();
         }
     }
 

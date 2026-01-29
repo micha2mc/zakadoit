@@ -61,7 +61,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.isNull(employeeDTO.getId())) {
             employeeDTO.setCorporateKey(generateCorporateKey());
         }
-        employeeDTO.setEmail(generateEmail(employeeDTO));
         employeeRepository.save(mapper.toEntity(employeeDTO));
     }
 
@@ -101,11 +100,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
     }
 
-    private String generateEmail(final EmployeeDTO employeeDTO) {
-        String firstName = employeeDTO.getFirstName().trim().toLowerCase().replaceAll("\\s", "");
-        //String lastName = employeeDTO.getLastName().trim().toLowerCase().replaceAll("\\s", "");
-        return firstName + "@" + "zkdit.com";
-    }
 
     private String generateCorporateKey() {
 

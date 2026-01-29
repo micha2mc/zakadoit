@@ -52,7 +52,7 @@ public class EmployeeCard extends VerticalLayout {
 
         // Avatar con iniciales
         Avatar avatar = new Avatar();
-        avatar.setAbbreviation(getInitials());
+        avatar.setImage("/images/men.png");
         avatar.addClassName("employee-avatar");
         avatar.setThemeName("large");
 
@@ -160,7 +160,6 @@ public class EmployeeCard extends VerticalLayout {
     }
 
     private Component createIsoHeader() {
-        //HorizontalLayout headerLayout = new HorizontalLayout();
         Div headerContainer = new Div();
         headerContainer.addClassName("languages-grid-header-layout-center");
 

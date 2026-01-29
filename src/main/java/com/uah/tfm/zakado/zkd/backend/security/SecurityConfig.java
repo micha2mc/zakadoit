@@ -23,8 +23,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain vaadinSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth ->
-                auth.requestMatchers(HttpMethod.GET, "/images/*.png").permitAll());  // <3>
-        http.with(vaadin(), vaadin -> vaadin.loginView(LoginView.class)); // <4>
+                auth.requestMatchers(HttpMethod.GET, "/images/*.png").permitAll());
+        http.with(vaadin(), vaadin -> vaadin.loginView(LoginView.class));
         return http.build();
     }
 
@@ -41,6 +41,6 @@ public class SecurityConfig {
                 .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
                 .roles("USER", "ADMIN")
                 .build();
-        return new InMemoryUserDetailsManager(user, admin); // <5>
+        return new InMemoryUserDetailsManager(user, admin);
     }
 }
