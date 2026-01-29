@@ -8,9 +8,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.security.PermitAll;
 
+@PermitAll
 @Route(value = "dashboard", layout = MainLayout.class)
-@PageTitle("Dashboard | ZAKADO IT")
+@PageTitle("Dashboard | Zakado IT")
 public class DashboardView extends VerticalLayout {
 
     private final EmployeeService employeeService;
@@ -26,7 +28,7 @@ public class DashboardView extends VerticalLayout {
 
 
     private Component getAllEmployees() {
-        ;
+
         Span stats = new Span(employeeService.findAllEmployees("").size() + " employees");
         stats.addClassNames(
                 LumoUtility.FontSize.XLARGE,

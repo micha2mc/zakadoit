@@ -1,5 +1,6 @@
 package com.uah.tfm.zakado.zkd.views;
 
+import com.uah.tfm.zakado.zkd.backend.security.SecurityService;
 import com.uah.tfm.zakado.zkd.views.employee.EmployeeView;
 import com.uah.tfm.zakado.zkd.views.utils.DashboardView;
 import com.uah.tfm.zakado.zkd.views.utils.DownloadReports;
@@ -12,11 +13,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.security.PermitAll;
 
+@PermitAll
 public class MainLayout extends AppLayout {
 
-    public MainLayout() {
+    private final SecurityService securityService;
 
+    public MainLayout(SecurityService securityService) {
+        this.securityService = securityService;
         createHeader();
         createDrawer();
     }
@@ -27,8 +32,8 @@ public class MainLayout extends AppLayout {
                 LumoUtility.FontSize.LARGE,
                 LumoUtility.Margin.MEDIUM);
 
-        //String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Log out ");// + u, e -> securityService.logout()); // <2>
+        String u = securityService.getAuthenticatedUser().getUsername();
+        Button logout = new Button("Log out " + u, e -> securityService.logout());
 
         var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
 

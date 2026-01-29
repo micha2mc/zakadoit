@@ -134,7 +134,7 @@ public class EmployeeCard extends VerticalLayout {
                     Span code = new Span(language.getIsocode());
                     code.getStyle()
                             .set("font-size", "var(--lumo-font-size-xs)")
-                            .set("color", "var(--lumo-secondary-text-color)")
+                            .set("color", "var(--lumo-primary-text-color)")
                             .set("background", "var(--lumo-contrast-5pct)")
                             .set("padding", "2px 8px")
                             .set("border-radius", "var(--lumo-border-radius-s)");

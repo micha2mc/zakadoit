@@ -19,26 +19,31 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import jakarta.annotation.security.PermitAll;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
+@PermitAll
 @SpringComponent
 @Scope("prototype")
+@PageTitle("Employees | Zakado IT")
 @Route(value = "", layout = MainLayout.class)
-@Slf4j
 public class EmployeeView extends VerticalLayout {
 
     private Dialog dialog;
     private EmployeeForm form;
+    private EmployeeService employeeService;
+
     private final TextField filterText = new TextField();
     private final Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
 
-    private EmployeeService employeeService;
 
 
     public EmployeeView(final EmployeeService employeeService) {
@@ -73,7 +78,7 @@ public class EmployeeView extends VerticalLayout {
     private void clearForm() {
         if (form != null) {
             EmployeeDTO emptyEmployee = new EmployeeDTO();
-            form.setEmployee(emptyEmployee);
+            form.setEmployeeDTO(emptyEmployee);
             form.getBinder().readBean(emptyEmployee);
         }
     }
@@ -91,9 +96,9 @@ public class EmployeeView extends VerticalLayout {
         );
 
         // Configuración de los listeners de los botones
-        form.addSaveListener(event ->saveEmployee(event.getEmployee()));
+        form.addSaveListener(event -> saveEmployeeDTO(event.getEmployeeDTO()));
 
-        form.addDeleteListener(event -> deleteEmployee(event.getEmployee()));
+        form.addDeleteListener(event -> deleteEmployeeDTO(event.getEmployeeDTO()));
 
         form.addCloseListener(event -> {
             clearForm();
@@ -137,7 +142,7 @@ public class EmployeeView extends VerticalLayout {
         });
     }
 
-    private void deleteEmployee(final EmployeeDTO employee) {
+    private void deleteEmployeeDTO(final EmployeeDTO employee) {
         if (Objects.nonNull(employee.getId())) {
             showDeleteConfirmation(employee);
             dialog.close();
@@ -149,9 +154,9 @@ public class EmployeeView extends VerticalLayout {
         }
     }
 
-    private void saveEmployee(final EmployeeDTO employee) {
+    private void saveEmployeeDTO(final EmployeeDTO employeeDTO) {
         try {
-            employeeService.saveEmployee(employee);
+            employeeService.saveEmployee(employeeDTO);
             updateList();
             dialog.close();
             Notification.show("Employee saved successfully",
@@ -187,7 +192,7 @@ public class EmployeeView extends VerticalLayout {
     }
 
     private void editEmployee(final EmployeeDTO employee) {
-        form.setEmployee(employee);
+        form.setEmployeeDTO(employee);
         dialog.open();
     }
 

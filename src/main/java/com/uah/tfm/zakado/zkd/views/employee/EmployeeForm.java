@@ -61,8 +61,10 @@ public class EmployeeForm extends FormLayout {
         configCheckboxGroup(languages);
         configTextArea();
 
-        binder.forField(company).bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
-        binder.forField(area).bind(EmployeeDTO::getArea, EmployeeDTO::setArea);
+        binder.forField(company)
+                .bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
+        binder.forField(area)
+                .bind(EmployeeDTO::getArea, EmployeeDTO::setArea);
         binder.forField(languageCheckboxGroup)
                 .bind(EmployeeDTO::getLanguages, EmployeeDTO::setLanguages);
 
@@ -133,12 +135,12 @@ public class EmployeeForm extends FormLayout {
     private void validateAndSave() {
         if (binder.isValid()) {
             try {
-                EmployeeDTO employee = binder.getBean();
-                if (Objects.isNull(employee)) {
-                    employee = new EmployeeDTO();
+                EmployeeDTO employeeDTO = binder.getBean();
+                if (Objects.isNull(employeeDTO)) {
+                    employeeDTO = new EmployeeDTO();
                 }
-                binder.writeBean(employee);
-                fireEvent(new SaveEvent(this, employee));
+                binder.writeBean(employeeDTO);
+                fireEvent(new SaveEvent(this, employeeDTO));
             } catch (ValidationException e) {
                 // Manejar error de validación
                 Notification.show("Error en la validación: " + e.getMessage(),
@@ -148,8 +150,56 @@ public class EmployeeForm extends FormLayout {
     }
 
 
-    public void setEmployee(final EmployeeDTO employee) {
-        binder.setBean(employee);
+    public void setEmployeeDTO(final EmployeeDTO employeeDTO) {
+        binder.setBean(employeeDTO);
+        checkIfAreaCompanyAndLanguageAreSelected(employeeDTO);
+    }
+
+    // Events
+    @Getter
+    public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeeForm> {
+        private final EmployeeDTO employeeDTO;
+
+        protected EmployeeFormEvent(EmployeeForm source, EmployeeDTO employeeDTO) {
+            super(source, false);
+            this.employeeDTO = employeeDTO;
+        }
+
+    }
+
+    public static class SaveEvent extends EmployeeFormEvent {
+        SaveEvent(EmployeeForm source, EmployeeDTO employeeDTO) {
+            super(source, employeeDTO);
+        }
+    }
+
+    public static class DeleteEvent extends EmployeeFormEvent {
+        DeleteEvent(EmployeeForm source, EmployeeDTO employee) {
+            super(source, employee);
+        }
+
+    }
+
+    public static class CloseEvent extends EmployeeFormEvent {
+        CloseEvent(EmployeeForm source) {
+            super(source, null);
+        }
+    }
+
+    public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
+        addListener(DeleteEvent.class, listener);
+    }
+
+    public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
+        addListener(SaveEvent.class, listener);
+    }
+
+    public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
+        addListener(CloseEvent.class, listener);
+    }
+
+
+    private void checkIfAreaCompanyAndLanguageAreSelected(final EmployeeDTO employee) {
         if (Objects.nonNull(employee.getArea())) {
             Area areaToSelect = area.getListDataView()
                     .getItems()
@@ -182,48 +232,5 @@ public class EmployeeForm extends FormLayout {
         } else {
             company.clear();
         }
-    }
-
-    // Events
-    @Getter
-    public static abstract class EmployeeFormEvent extends ComponentEvent<EmployeeForm> {
-        private final EmployeeDTO employee;
-
-        protected EmployeeFormEvent(EmployeeForm source, EmployeeDTO employee) {
-            super(source, false);
-            this.employee = employee;
-        }
-
-    }
-
-    public static class SaveEvent extends EmployeeFormEvent {
-        SaveEvent(EmployeeForm source, EmployeeDTO employee) {
-            super(source, employee);
-        }
-    }
-
-    public static class DeleteEvent extends EmployeeFormEvent {
-        DeleteEvent(EmployeeForm source, EmployeeDTO employee) {
-            super(source, employee);
-        }
-
-    }
-
-    public static class CloseEvent extends EmployeeFormEvent {
-        CloseEvent(EmployeeForm source) {
-            super(source, null);
-        }
-    }
-
-    public void addDeleteListener(ComponentEventListener<DeleteEvent> listener) {
-        addListener(DeleteEvent.class, listener);
-    }
-
-    public void addSaveListener(ComponentEventListener<SaveEvent> listener) {
-        addListener(SaveEvent.class, listener);
-    }
-
-    public void addCloseListener(ComponentEventListener<CloseEvent> listener) {
-        addListener(CloseEvent.class, listener);
     }
 }
