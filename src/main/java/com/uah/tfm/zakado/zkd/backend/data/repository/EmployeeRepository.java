@@ -18,12 +18,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findEmployeeByCK(String ck);
 
 
-    @Query("SELECT DISTINCT e FROM Employee e " +
-            "LEFT JOIN FETCH e.company " +
-            "LEFT JOIN FETCH e.area " +
-            "WHERE LOWER(e.firstName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-            "OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-            "OR e.corporateKey LIKE CONCAT('%', :filter, '%')")
+    @Query("""
+            SELECT DISTINCT e FROM Employee e 
+            LEFT JOIN FETCH e.company LEFT JOIN FETCH e.area
+            WHERE LOWER(e.firstName) LIKE LOWER(CONCAT('%', :filter, '%'))
+            OR LOWER(e.lastName) LIKE LOWER(CONCAT('%', :filter, '%'))
+            OR LOWER(e.corporateKey) LIKE LOWER(CONCAT('%', :filter, '%'))
+            """)
     List<Employee> searchEmployees(@Param("filter") String searchTerm);
 
     @EntityGraph(attributePaths = {"company", "area"})

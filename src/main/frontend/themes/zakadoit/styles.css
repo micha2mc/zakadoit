@@ -4,6 +4,73 @@
     display: none;
   }
 }
+
+/* Grid de idiomas */
+.languages-grid {
+    border: 1px solid var(--lumo-contrast-10pct);
+    border-radius: var(--lumo-border-radius-m);
+    background: var(--lumo-base-color);
+}
+
+/* Nombre del idioma */
+.language-name {
+    font-weight: 500;
+    color: var(--lumo-body-text-color);
+}
+
+/* Código ISO */
+.language-iso-code {
+    font-size: var(--lumo-font-size-xs);
+    color: var(--lumo-primary-text-color);
+    background: var(--lumo-contrast-5pct);
+    padding: 2px 8px;
+    border-radius: var(--lumo-border-radius-s);
+}
+
+/* Iconos de estado */
+.language-status-icon-check {
+    color: var(--lumo-success-color);
+}
+
+.language-status-icon-close {
+    color: var(--lumo-error-color);
+}
+
+/* Header personalizado */
+.languages-grid-header {
+    font-weight: bold;
+    color: var(--lumo-primary-color);
+    text-transform: uppercase;
+}
+
+.languages-grid-header-layout-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Header con icono */
+.languages-grid-header-layout {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+.languages-grid-header-icon {
+    color: var(--lumo-primary-color);
+}
+
+.languages-grid-header-text {
+    font-weight: bold;
+    color: var(--lumo-primary-color);
+    text-transform: uppercase;
+}
+
+
 a[highlight] {
     font-weight: bold;
     text-decoration: underline;

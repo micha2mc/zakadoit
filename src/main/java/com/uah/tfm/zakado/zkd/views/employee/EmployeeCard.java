@@ -97,49 +97,39 @@ public class EmployeeCard extends VerticalLayout {
         return content;
     }
 
-    private Component createLanguagesSection(Set<Language> languages) {
+    private Component createLanguagesSection(final Set<Language> languages) {
         // Convertir Set a List para ordenarlos alfabéticamente
         List<Language> sortedAllLanguages = this.allLanguages.stream()
                 .sorted(Comparator.comparing(Language::getName))
                 .collect(Collectors.toList());
-        Set<Long> employeeLanguageIds = languages != null ?
+        Set<Long> employeeLanguageIds = Objects.nonNull(languages) ?
                 languages.stream()
                         .map(Language::getId)
                         .collect(Collectors.toSet()) :
                 Collections.emptySet();
 
         Grid<Language> grid = new Grid<>();
+        grid.addClassName("languages-grid");
         grid.setItems(sortedAllLanguages);
         grid.setAllRowsVisible(true);
-        //grid.setHeightByRows(true);
         grid.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER);
-        grid.getStyle()
-                .set("border", "1px solid var(--lumo-contrast-10pct)")
-                .set("border-radius", "var(--lumo-border-radius-m)")
-                .set("background", "var(--lumo-base-color)");
 
         // Columna de nombre del idioma
         grid.addColumn(new ComponentRenderer<>(language -> {
                     Span name = new Span(language.getName());
-                    name.getStyle()
-                            .set("font-weight", "500")
-                            .set("color", "var(--lumo-body-text-color)");
+                    name.addClassName("language-name");
                     return name;
-                })).setHeader("Languages")
+                }))
+                .setHeader(createLanguagesHeader())
                 .setAutoWidth(true)
                 .setFlexGrow(1);
 
         // Columna de código ISO
         grid.addColumn(new ComponentRenderer<>(language -> {
                     Span code = new Span(language.getIsocode());
-                    code.getStyle()
-                            .set("font-size", "var(--lumo-font-size-xs)")
-                            .set("color", "var(--lumo-primary-text-color)")
-                            .set("background", "var(--lumo-contrast-5pct)")
-                            .set("padding", "2px 8px")
-                            .set("border-radius", "var(--lumo-border-radius-s)");
+                    code.addClassName("language-iso-code");
                     return code;
-                })).setHeader("ISO")
+                })).setHeader(createIsoHeader())
                 .setWidth("80px")
                 .setTextAlign(ColumnTextAlign.CENTER);
 
@@ -149,13 +139,11 @@ public class EmployeeCard extends VerticalLayout {
                     Icon statusIcon;
                     if (hasLanguage) {
                         statusIcon = VaadinIcon.CHECK.create();
-                        statusIcon.getStyle()
-                                .set("color", "var(--lumo-success-color)");
+                        statusIcon.addClassName("language-status-icon-check");
 
                     } else {
                         statusIcon = VaadinIcon.CLOSE_SMALL.create();
-                        statusIcon.getStyle()
-                                .set("color", "var(--lumo-error-color)");
+                        statusIcon.addClassName("language-status-icon-close");
                     }
                     statusIcon.setSize("var(--lumo-icon-size-s)");
 
@@ -169,6 +157,37 @@ public class EmployeeCard extends VerticalLayout {
                 .setFlexGrow(0);
 
         return grid;
+    }
+
+    private Component createIsoHeader() {
+        //HorizontalLayout headerLayout = new HorizontalLayout();
+        Div headerContainer = new Div();
+        headerContainer.addClassName("languages-grid-header-layout-center");
+
+        Icon icon = VaadinIcon.FLAG.create();
+        icon.addClassName("languages-grid-header-icon");
+        icon.setSize("14px");
+
+        Span text = new Span("ISO");
+        text.addClassName("languages-grid-header-text");
+
+        headerContainer.add(icon, text);
+        return headerContainer;
+    }
+
+    private Component createLanguagesHeader() {
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.addClassName("languages-grid-header-layout");
+
+        Icon icon = VaadinIcon.GLOBE.create();
+        icon.addClassName("languages-grid-header-icon");
+        icon.setSize("14px");
+
+        Span text = new Span("Languages");
+        text.addClassName("languages-grid-header-text");
+
+        headerLayout.add(icon, text);
+        return headerLayout;
     }
 
     private Component createNoLanguagesMessage() {
@@ -203,6 +222,7 @@ public class EmployeeCard extends VerticalLayout {
         H4 label = new H4("Career:");
         label.getStyle()
                 .set("margin", "0 0 8px 0")
+                .set("font-weight", "500")
                 .set("color", "var(--lumo-primary-text-color)")
                 .set("font-size", "var(--lumo-font-size-m)");
 
