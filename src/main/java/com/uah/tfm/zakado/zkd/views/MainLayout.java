@@ -2,8 +2,8 @@ package com.uah.tfm.zakado.zkd.views;
 
 import com.uah.tfm.zakado.zkd.backend.security.SecurityService;
 import com.uah.tfm.zakado.zkd.views.employee.EmployeeView;
-import com.uah.tfm.zakado.zkd.views.utils.DashboardView;
-import com.uah.tfm.zakado.zkd.views.utils.DownloadReports;
+import com.uah.tfm.zakado.zkd.views.navigation.DashboardView;
+import com.uah.tfm.zakado.zkd.views.navigation.DownloadReports;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;

@@ -5,12 +5,14 @@ import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.backend.exception.EmployeeEmptyException;
 import com.uah.tfm.zakado.zkd.backend.service.EmployeeService;
 import com.uah.tfm.zakado.zkd.views.MainLayout;
+import com.uah.tfm.zakado.zkd.views.utils.ServiceUtils;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -18,6 +20,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -39,11 +42,10 @@ public class EmployeeView extends VerticalLayout {
 
     private Dialog dialog;
     private EmployeeForm form;
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     private final TextField filterText = new TextField();
     private final Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
-
 
 
     public EmployeeView(final EmployeeService employeeService) {
@@ -118,18 +120,18 @@ public class EmployeeView extends VerticalLayout {
     /**
      * Metodo separado para mostrar confirmación de eliminación
      */
-    private void showDeleteConfirmation(final EmployeeDTO employee) {
+    private void showDeleteConfirmation(final EmployeeDTO employeeDTO) {
         ConfirmDialog confirmDialog = new ConfirmDialog();
         confirmDialog.setHeader("Delete Employee");
         confirmDialog.setText("Are you sure you want to delete " +
-                employee.getFirstName() + " " + employee.getLastName() + "?");
+                employeeDTO.getFullName() + "?");
         confirmDialog.setCancelable(true);
         confirmDialog.setConfirmText("Delete");
         confirmDialog.setConfirmButtonTheme("error primary");
         confirmDialog.open();
         confirmDialog.addConfirmListener(event -> {
             try {
-                employeeService.deleteEmployee(employee);
+                employeeService.deleteEmployee(employeeDTO);
                 updateList();
                 Notification.show("Employee deleted successfully",
                                 1000, Notification.Position.MIDDLE)
@@ -191,8 +193,8 @@ public class EmployeeView extends VerticalLayout {
         dialog.open();
     }
 
-    private void editEmployee(final EmployeeDTO employee) {
-        form.setEmployeeDTO(employee);
+    private void editEmployee(final EmployeeDTO employeeDTO) {
+        form.setEmployeeDTO(employeeDTO);
         dialog.open();
     }
 
@@ -202,7 +204,9 @@ public class EmployeeView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassNames("employee-grid");
         grid.setSizeFull();
-        grid.setColumns("corporateKey", "firstName", "lastName");
+        grid.setColumns("corporateKey", "fullName");
+        grid.addColumn(new ComponentRenderer<>(ServiceUtils::createExperienceLevelBadge))
+                .setSortable(Boolean.TRUE).setHeader("Year Of Experience");
         grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area")
                 .setSortable(Boolean.TRUE);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -214,6 +218,8 @@ public class EmployeeView extends VerticalLayout {
             }
         });
     }
+
+
 
     /**
      * Crea y muestra la tarjeta del empleado

@@ -1,4 +1,4 @@
-package com.uah.tfm.zakado.zkd.views.utils;
+package com.uah.tfm.zakado.zkd.views.navigation;
 
 import com.uah.tfm.zakado.zkd.backend.service.EmployeeService;
 import com.uah.tfm.zakado.zkd.views.MainLayout;

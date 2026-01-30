@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,10 +25,11 @@ public class EmployeeDTO {
     private String corporateKey;
 
     @NotEmpty
-    private String firstName;
+    private String fullName;
 
-    @NotEmpty
-    private String lastName;
+    private int yearOfExperience;
+
+    private BigDecimal annualSalary;
 
     private String email;
 

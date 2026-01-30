@@ -20,9 +20,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -31,7 +29,9 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,8 +46,9 @@ public class EmployeeForm extends FormLayout {
     private RadioButtonGroup<Area> area;
     private ComboBox<Company> company;
     private CheckboxGroup<Language> languageCheckboxGroup;
-    private final TextField firstName = new TextField("First name");
-    private final TextField lastName = new TextField("Last name");
+    private final TextField fullName = new TextField("Full Name");
+    private final IntegerField yearOfExperience = new IntegerField ("Year Of Experience");
+    private final BigDecimalField annualSalary = new BigDecimalField ("Salary per Year");
     private final DatePicker dob = new DatePicker("Date Of Birth");
     private final EmailField email = new EmailField("Email address");
 
@@ -66,6 +67,7 @@ public class EmployeeForm extends FormLayout {
         configCheckboxGroup(languages);
         configTextArea();
         configEmailField();
+        configNumberField();
 
         binder.forField(company)
                 .bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
@@ -76,8 +78,28 @@ public class EmployeeForm extends FormLayout {
 
         binder.bindInstanceFields(this);
 
-        add(firstName, lastName, email, dob, company, area, career, languageCheckboxGroup, createButtonsLayout());
+        add(fullName, email, dob, yearOfExperience, annualSalary, company, area, career,
+                languageCheckboxGroup, createButtonsLayout());
 
+    }
+
+    private void configNumberField() {
+        //Salary
+        Locale localeES = new Locale.Builder()
+                .setLanguage("es")
+                .setRegion("ES")
+                .build();
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(localeES);
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator(',');
+        annualSalary.setLocale(localeES);
+        annualSalary.setRequiredIndicatorVisible(true);
+        annualSalary.setPrefixComponent(new Span("€"));
+
+        //YOE
+        yearOfExperience.setMin(0);
+        yearOfExperience.setI18n(new IntegerField.IntegerFieldI18n()
+                .setMinErrorMessage("Valor mínimo es 0"));
     }
 
     private void configEmailField() {
@@ -101,7 +123,7 @@ public class EmployeeForm extends FormLayout {
         languageCheckboxGroup.setLabel("Languages");
         languageCheckboxGroup.setItems(languages);
         languageCheckboxGroup.setItemLabelGenerator(Language::getName);
-        languageCheckboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
+        languageCheckboxGroup.addThemeVariants(CheckboxGroupVariant.AURA_HORIZONTAL);
     }
 
 

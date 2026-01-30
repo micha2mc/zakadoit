@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,10 +32,14 @@ public class Employee {
     private String corporateKey;
 
     @NotEmpty
-    private String firstName;
+    private String fullName;
 
-    @NotEmpty
-    private String lastName;
+    @NotNull
+    @Column(name = "year_of_experience")
+    private int yearOfExperience;
+
+    @Column(name = "salary_per_year")
+    private BigDecimal annualSalary;
 
     @Email
     @NotEmpty

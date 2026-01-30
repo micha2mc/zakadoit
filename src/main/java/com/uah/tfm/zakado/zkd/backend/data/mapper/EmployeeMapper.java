@@ -38,8 +38,9 @@ public class EmployeeMapper {
         return EmployeeDTO.builder()
                 .id(employee.getId())
                 .corporateKey(employee.getCorporateKey())
-                .firstName(employee.getFirstName())
-                .lastName(employee.getLastName())
+                .fullName(employee.getFullName())
+                .yearOfExperience(employee.getYearOfExperience())
+                .annualSalary(employee.getAnnualSalary())
                 .email(employee.getEmail())
                 .dob(employee.getDob())
                 .area(employee.getArea())
@@ -59,8 +60,9 @@ public class EmployeeMapper {
 
             // Actualizar campos básicos
             employee.setCorporateKey(employeeDTO.getCorporateKey());
-            employee.setFirstName(employeeDTO.getFirstName());
-            employee.setLastName(employeeDTO.getLastName());
+            employee.setFullName(employeeDTO.getFullName());
+            employee.setYearOfExperience(employeeDTO.getYearOfExperience());
+            employee.setAnnualSalary(employeeDTO.getAnnualSalary());
             employee.setEmail(employeeDTO.getEmail().toUpperCase());
             employee.setDob(employeeDTO.getDob());
             employee.setCareer(employeeDTO.getCareer());
@@ -68,8 +70,9 @@ public class EmployeeMapper {
             // Si es nuevo, crear entidad
             employee = Employee.builder()
                     .corporateKey(employeeDTO.getCorporateKey())
-                    .firstName(employeeDTO.getFirstName())
-                    .lastName(employeeDTO.getLastName())
+                    .fullName(employeeDTO.getFullName())
+                    .yearOfExperience(employeeDTO.getYearOfExperience())
+                    .annualSalary(employeeDTO.getAnnualSalary())
                     .email(employeeDTO.getEmail())
                     .dob(employeeDTO.getDob())
                     .career(employeeDTO.getCareer())

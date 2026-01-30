@@ -56,7 +56,7 @@ public class EmployeeCard extends VerticalLayout {
         avatar.addClassName("employee-avatar");
         avatar.setThemeName("large");
 
-        H2 name = new H2(employeeDTO.getFirstName() + " " + employeeDTO.getLastName());
+        H2 name = new H2(employeeDTO.getFullName());
         name.addClassName("employee-full-name");
         Span corporateKey = new Span("CK: " + employeeDTO.getCorporateKey());
         corporateKey.addClassName("employee-corporate-key");
@@ -253,7 +253,7 @@ public class EmployeeCard extends VerticalLayout {
         return row;
     }
 
-    private String getInitials() {
+    /*private String getInitials() {
         String initials = "";
 
         if (StringUtils.hasText(employeeDTO.getFirstName())) {
@@ -266,7 +266,7 @@ public class EmployeeCard extends VerticalLayout {
 
         }
         return initials.isEmpty() ? "?" : initials;
-    }
+    }*/
 
     public EmployeeDTO getEmployee() {
         return employeeDTO;
