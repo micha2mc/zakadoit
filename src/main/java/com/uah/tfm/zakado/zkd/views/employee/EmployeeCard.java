@@ -2,6 +2,7 @@ package com.uah.tfm.zakado.zkd.views.employee;
 
 import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
 import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
+import com.uah.tfm.zakado.zkd.views.utils.ServiceUtils;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -85,6 +86,24 @@ public class EmployeeCard extends VerticalLayout {
         if (Objects.nonNull(employeeDTO.getCompany()) && employeeDTO.getCompany().getName() != null) {
             content.add(createInfoRow(VaadinIcon.OFFICE, employeeDTO.getCompany().getName()));
         }
+        if (Objects.nonNull(employeeDTO.getAnnualSalary())) {
+
+            HorizontalLayout row = new HorizontalLayout(VaadinIcon.EURO.create(), new Span(String.valueOf(employeeDTO.getAnnualSalary())));
+            row.addClassName("employee-info-row");
+            row.setSpacing(true);
+            row.setAlignItems(FlexComponent.Alignment.CENTER);
+            row.setWidthFull();
+            content.add(row);
+        }
+        HorizontalLayout rowYear = new HorizontalLayout(ServiceUtils.createExperienceLevelBadge(employeeDTO),
+                new Span(employeeDTO.getYearOfExperience() + " years of experience"));
+        rowYear.addClassName("employee-info-row");
+        rowYear.setSpacing(true);
+        rowYear.setAlignItems(FlexComponent.Alignment.CENTER);
+        rowYear.setWidthFull();
+        content.add(rowYear);
+
+
         if (Objects.nonNull(employeeDTO.getLanguages())) {
             content.add(createLanguagesSection(employeeDTO.getLanguages()));
         } else {
@@ -243,13 +262,11 @@ public class EmployeeCard extends VerticalLayout {
     }
 
     private HorizontalLayout createInfoRow(VaadinIcon icon, String text) {
-        HorizontalLayout row = new HorizontalLayout(
-                icon.create(),
-                new Span(text));
+        HorizontalLayout row = new HorizontalLayout(icon.create(), new Span(text));
+        row.addClassName("employee-info-row");
         row.setSpacing(true);
         row.setAlignItems(FlexComponent.Alignment.CENTER);
         row.setWidthFull();
-        row.addClassName("employee-info-row");
         return row;
     }
 

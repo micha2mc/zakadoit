@@ -12,7 +12,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -206,7 +205,7 @@ public class EmployeeView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("corporateKey", "fullName");
         grid.addColumn(new ComponentRenderer<>(ServiceUtils::createExperienceLevelBadge))
-                .setSortable(Boolean.TRUE).setHeader("Year Of Experience");
+                .setHeader("Year Of Experience");
         grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area")
                 .setSortable(Boolean.TRUE);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
