@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -46,6 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return employees.stream()
                 .map(mapper::toDTO)
+                .sorted(Comparator.comparing(EmployeeDTO::getId).reversed())
                 .collect(Collectors.toList());
     }
 

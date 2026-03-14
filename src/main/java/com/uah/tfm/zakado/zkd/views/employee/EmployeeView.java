@@ -28,6 +28,7 @@ import jakarta.annotation.security.PermitAll;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -205,7 +206,9 @@ public class EmployeeView extends VerticalLayout {
         grid.setSizeFull();
         grid.setColumns("corporateKey", "fullName");
         grid.addColumn(new ComponentRenderer<>(ServiceUtils::createExperienceLevelBadge))
-                .setHeader("Year Of Experience");
+                .setHeader("Year Of Experience")
+                .setSortable(Boolean.TRUE)
+                        .setComparator(Comparator.comparing(EmployeeDTO::getYearOfExperience));
         grid.addColumn(employee -> employee.getArea().getName()).setHeader("Area")
                 .setSortable(Boolean.TRUE);
         grid.getColumns().forEach(col -> col.setAutoWidth(true));

@@ -24,7 +24,7 @@ INSERT INTO "LANGUAGE" (ID, NAME, ISOCODE) VALUES
 INSERT INTO employee (id, salary_per_year, career, corporate_key, date_of_birth, email, full_name, year_of_experience, area_id, company_id) VALUES
 (1000, 55000.00, 'Software Developer', 'IH44ZV', '1987-03-15', 'obama.watson@zakadoit.com', 'Juan Obama Watson', 8, 2, 1),
 (1001, 24000.00, 'Aprendiz de Ciberseguridad con la integración de IA', 'KO96PZ', '1999-02-25', 'MBULITO.SANTANDER@ZAKADOIT.COM', 'Paloma Santander Mbulito', 2, 4, 4),
-(1002, 68000.00, 'Experto en Sistemas e Infraestucturas aeronaáticas ', 'UH88QP', '1989-05-30', 'carretero.gonzales@zakadoit.com', 'Luis Carretero Gonzáles', 10, 3, 5),
+(1002, 68000.00, 'Experto en Sistemas e Infraestucturas aeronaáticas ', 'UH88QP', '1989-05-30', 'carretero.gonzalez@zakadoit.com', 'Luis Carretero González', 10, 3, 5),
 (1003, 35000.00, 'Servicio de resolución de incidencias', 'KT10ZJ', '2002-12-12', 'mbasogo.mikue@zakadoit.com', 'Teodora Mbasogo Mikue', 4, 5, 6),
 (1004, 45000.00, 'Encargado de las estrategías y consultoría', 'AT63OT', '2003-01-15', 'zhang.wei@zakado.com', 'Zhang Wei', 6, 1, 3),
 (1005, 35000.00, 'Desarrollo de Aplicaciones Web', 'VR21YS', '2000-01-20', 'wang.fang@zakadoit.com', 'Wang Fang', 2, 2, 2),
@@ -36,6 +36,9 @@ INSERT INTO employee (id, salary_per_year, career, corporate_key, date_of_birth,
 (1022, 55000.00, 'Software Developer', 'OY40XE', '1985-03-15', 'juan.perez@zakadoit.com', 'Juan Pérez García', 8, 2, 5),
 (1023, 75000.00, 'Project Manager', 'PN68RD', '1980-07-22', 'maria.lopez@zakadoit.com', 'María López Fernández', 12, 1, 4),
 (1024, 40000.00, 'Software Developer', 'FU42RN', '1998-09-27', 'antonio.ndong@zakadoit.com', 'Antonio Ndong  Aznar', 3, 2, 1);
+
+-- reinicio de la secuencia
+ALTER SEQUENCE employee_id_seq RESTART WITH 1025;
 
 -- Insertar relaciones Employee-Language
 INSERT INTO employee_language (employee_id, language_id) VALUES
