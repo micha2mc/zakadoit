@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
-@Transactional
 @Slf4j
+@Component
+@Transactional
+@RequiredArgsConstructor
 public class EmployeeMapper {
     private final CompanyRepository companyRepository;
     private final AreaRepository areaRepository;
