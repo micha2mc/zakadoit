@@ -46,11 +46,11 @@ public class EmployeeForm extends FormLayout {
     private RadioButtonGroup<Area> area;
     private ComboBox<Company> company;
     private CheckboxGroup<Language> languageCheckboxGroup;
+    private EmailField email;
     private final TextField fullName = new TextField("Full Name");
     private final IntegerField yearOfExperience = new IntegerField ("Year Of Experience");
     private final BigDecimalField annualSalary = new BigDecimalField ("Salary per Year");
     private final DatePicker dob = new DatePicker("Date Of Birth");
-    private final EmailField email = new EmailField("Email address");
 
 
     Button save = new Button("Save");
@@ -103,6 +103,7 @@ public class EmployeeForm extends FormLayout {
     }
 
     private void configEmailField() {
+        email = new EmailField("Email address");
         email.setPrefixComponent(VaadinIcon.ENVELOPE.create());
         email.setRequiredIndicatorVisible(true);
         email.setPattern(EMAIL_PATTERN);
