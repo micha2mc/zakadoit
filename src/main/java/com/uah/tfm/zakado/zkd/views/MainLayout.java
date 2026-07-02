@@ -28,9 +28,7 @@ public class MainLayout extends AppLayout {
 
     private void createHeader() {
         H1 logo = new H1("ZAKADO IT");
-        logo.addClassNames(
-                LumoUtility.FontSize.LARGE,
-                LumoUtility.Margin.MEDIUM);
+        logo.addClassNames(LumoUtility.FontSize.LARGE,LumoUtility.Margin.MEDIUM);
 
         String u = securityService.getAuthenticatedUser().getUsername();
         Button logout = new Button("Log out " + u, e -> securityService.logout());
@@ -40,9 +38,7 @@ public class MainLayout extends AppLayout {
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo);
         header.setWidthFull();
-        header.addClassNames(
-                LumoUtility.Padding.Vertical.NONE,
-                LumoUtility.Padding.Horizontal.MEDIUM);
+        header.addClassNames(LumoUtility.Padding.Vertical.NONE,LumoUtility.Padding.Horizontal.MEDIUM);
 
         addToNavbar(header);
 

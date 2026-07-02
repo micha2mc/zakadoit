@@ -12,8 +12,8 @@ import jakarta.annotation.security.PermitAll;
 import java.io.ByteArrayOutputStream;
 
 @PermitAll
-@Route(value = "reports", layout = MainLayout.class)
 @PageTitle("Reports | ZAKADO IT")
+@Route(value = "reports", layout = MainLayout.class)
 public class DownloadReports extends VerticalLayout {
 
     private final EmployeeService employeeService;

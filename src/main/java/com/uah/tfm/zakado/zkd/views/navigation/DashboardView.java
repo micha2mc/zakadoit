@@ -11,9 +11,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
 
 @PermitAll
-@Route(value = "dashboard", layout = MainLayout.class)
 @PageTitle("Dashboard | Zakado IT")
+@Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
+
+
 
     private final EmployeeService employeeService;
 
