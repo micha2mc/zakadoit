@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @Builder
-public class Employee {
+public class EmployeeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -58,14 +58,14 @@ public class Employee {
     @JoinColumn(name = "company_id")
     @JsonIgnoreProperties({"employees"})
     @NotNull
-    private Company company;
+    private CompanyEntity company;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "area_id", nullable = false)
     @JsonIgnoreProperties({"employees"})
-    private Area area;
+    private AreaEntity area;
 
     @ManyToMany
     @JoinTable(
@@ -75,6 +75,6 @@ public class Employee {
     )
     @JsonIgnoreProperties({"employees"})
     @Builder.Default
-    private Set<Language> languages = new HashSet<>();
+    private Set<LanguageEntity> languages = new HashSet<>();
 
 }

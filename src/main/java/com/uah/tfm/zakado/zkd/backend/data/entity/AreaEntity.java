@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class AreaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -24,5 +24,5 @@ public class Area {
     private String name;
 
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Employee> employees = new LinkedList<>();
+    private List<EmployeeEntity> employees = new LinkedList<>();
 }

@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Language {
+public class LanguageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -35,5 +35,5 @@ public class Language {
 
     @ManyToMany(mappedBy = "languages")
     @JsonIgnoreProperties({"languages"})
-    private Set<Employee> employees = new HashSet<>();
+    private Set<EmployeeEntity> employees = new HashSet<>();
 }

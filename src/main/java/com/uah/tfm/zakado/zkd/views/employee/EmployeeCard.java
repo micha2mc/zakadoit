@@ -1,6 +1,6 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
-import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.entity.LanguageEntity;
 import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.views.utils.ServiceUtils;
 import com.vaadin.flow.component.Component;
@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 public class EmployeeCard extends VerticalLayout {
 
     private final EmployeeDTO employeeDTO;
-    private final List<Language> allLanguages;
+    private final List<LanguageEntity> allLanguages;
 
-    public EmployeeCard(EmployeeDTO employeeDTO, List<Language> allLanguages) {
+    public EmployeeCard(EmployeeDTO employeeDTO, List<LanguageEntity> allLanguages) {
         this.employeeDTO = employeeDTO;
         this.allLanguages = allLanguages;
         addClassName("employee-detail-card");
@@ -116,18 +116,18 @@ public class EmployeeCard extends VerticalLayout {
         return content;
     }
 
-    private Component createLanguagesSection(final Set<Language> languages) {
+    private Component createLanguagesSection(final Set<LanguageEntity> languages) {
         // Convertir Set a List para ordenarlos alfabéticamente
-        List<Language> sortedAllLanguages = this.allLanguages.stream()
-                .sorted(Comparator.comparing(Language::getName))
+        List<LanguageEntity> sortedAllLanguages = this.allLanguages.stream()
+                .sorted(Comparator.comparing(LanguageEntity::getName))
                 .collect(Collectors.toList());
         Set<Long> employeeLanguageIds = Objects.nonNull(languages) ?
                 languages.stream()
-                        .map(Language::getId)
+                        .map(LanguageEntity::getId)
                         .collect(Collectors.toSet()) :
                 Collections.emptySet();
 
-        Grid<Language> grid = new Grid<>();
+        Grid<LanguageEntity> grid = new Grid<>();
         grid.addClassName("languages-grid");
         grid.setItems(sortedAllLanguages);
         grid.setAllRowsVisible(true);

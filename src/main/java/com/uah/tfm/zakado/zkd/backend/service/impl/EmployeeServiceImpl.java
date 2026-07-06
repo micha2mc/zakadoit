@@ -1,9 +1,9 @@
 package com.uah.tfm.zakado.zkd.backend.service.impl;
 
-import com.uah.tfm.zakado.zkd.backend.data.entity.Area;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Company;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Employee;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.entity.AreaEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.CompanyEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.EmployeeEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.LanguageEntity;
 import com.uah.tfm.zakado.zkd.backend.data.mapper.EmployeeMapper;
 import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.backend.data.repository.AreaRepository;
@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public List<EmployeeDTO> findAllEmployees(final String strFilter) {
 
-        List<Employee> employees;
+        List<EmployeeEntity> employees;
         if (strFilter.isBlank()) {
             employees = employeeRepository.findAll();
         } else {
@@ -69,9 +69,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public void deleteEmployee(final EmployeeDTO employeeDTO) {
 
-        Employee employee = employeeRepository
+        EmployeeEntity employee = employeeRepository
                 .findById(employeeDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Employee not found"));
-        for (Language language : employee.getLanguages()) {
+        for (LanguageEntity language : employee.getLanguages()) {
             language.getEmployees().remove(employee);
         }
         employeeRepository.delete(employee);
@@ -79,19 +79,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public List<Company> findAllCompanies() {
+    public List<CompanyEntity> findAllCompanies() {
         return companyRepository.findAll();
     }
 
     @Override
     @Transactional
-    public List<Area> findAllArea() {
+    public List<AreaEntity> findAllArea() {
         return areaRepository.findAll();
     }
 
     @Override
     @Transactional
-    public List<Language> findAllLanguages() {
+    public List<LanguageEntity> findAllLanguages() {
         return languageRepository.findAll();
     }
 
@@ -106,7 +106,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private String generateCorporateKey() {
 
         String ck = getCorporateKeys();
-        Employee employee = employeeRepository.findEmployeeByCK(ck);
+        EmployeeEntity employee = employeeRepository.findEmployeeByCK(ck);
         return employee == null ? ck : generateCorporateKey();
     }
 

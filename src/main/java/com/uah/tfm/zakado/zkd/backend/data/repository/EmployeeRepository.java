@@ -1,6 +1,6 @@
 package com.uah.tfm.zakado.zkd.backend.data.repository;
 
-import com.uah.tfm.zakado.zkd.backend.data.entity.Employee;
+import com.uah.tfm.zakado.zkd.backend.data.entity.EmployeeEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,13 +9,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
 
     @Query(""" 
             select e from Employee e 
             where e.corporateKey = :ck
             """)
-    Employee findEmployeeByCK(String ck);
+    EmployeeEntity findEmployeeByCK(String ck);
 
 
     @Query("""
@@ -24,12 +24,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             WHERE LOWER(e.fullName) LIKE LOWER(CONCAT('%', :filter, '%'))
             OR LOWER(e.corporateKey) LIKE LOWER(CONCAT('%', :filter, '%'))
             """)
-    List<Employee> searchEmployees(@Param("filter") String searchTerm);
+    List<EmployeeEntity> searchEmployees(@Param("filter") String searchTerm);
 
     @EntityGraph(attributePaths = {"company", "area"})
     @Override
-    List<Employee> findAll();
+    List<EmployeeEntity> findAll();
 
     @EntityGraph(attributePaths = {"company", "area", "languages"})
-    Optional<Employee> findWithAllRelationsById(Long id);
+    Optional<EmployeeEntity> findWithAllRelationsById(Long id);
 }

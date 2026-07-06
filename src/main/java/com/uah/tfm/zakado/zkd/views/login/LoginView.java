@@ -1,7 +1,6 @@
 package com.uah.tfm.zakado.zkd.views.login;
 
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -22,17 +21,13 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		setSizeFull(); 
 		setAlignItems(Alignment.CENTER);
 		setJustifyContentMode(JustifyContentMode.CENTER);
-
 		login.setAction("login");
-
 		add(new H1("Zakado IT"));
-		add(new Span("Username: admin, Password: password"));
 		add(login);
 	}
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-		// inform the user about an authentication error
 		if(beforeEnterEvent.getLocation()  
         .getQueryParameters()
         .getParameters()

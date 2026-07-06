@@ -1,6 +1,6 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
-import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.entity.LanguageEntity;
 import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.backend.exception.EmployeeEmptyException;
 import com.uah.tfm.zakado.zkd.backend.service.EmployeeService;
@@ -89,19 +89,15 @@ public class EmployeeView extends VerticalLayout {
         if (Objects.nonNull(form)) {
             dialog.remove(form);
         }
-
         // Crear nuevo formulario
         form = new EmployeeForm(
                 employeeService.findAllCompanies(),
                 employeeService.findAllArea(),
                 employeeService.findAllLanguages()
         );
-
         // Configuración de los listeners de los botones
         form.addSaveListener(event -> saveEmployeeDTO(event.getEmployeeDTO()));
-
         form.addDeleteListener(event -> deleteEmployeeDTO(event.getEmployeeDTO()));
-
         form.addCloseListener(event -> {
             clearForm();
             dialog.close();
@@ -134,7 +130,7 @@ public class EmployeeView extends VerticalLayout {
                 employeeService.deleteEmployee(employeeDTO);
                 updateList();
                 Notification.show("Employee deleted successfully",
-                                1000, Notification.Position.MIDDLE)
+                                10000, Notification.Position.MIDDLE)
                         .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             } catch (Exception e) {
                 String message = "Error deleting employee";
@@ -162,7 +158,7 @@ public class EmployeeView extends VerticalLayout {
             updateList();
             dialog.close();
             Notification.show("Employee saved successfully",
-                            1000, Notification.Position.MIDDLE)
+                            10000, Notification.Position.MIDDLE)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             String message = "Error saving employee";
@@ -228,7 +224,7 @@ public class EmployeeView extends VerticalLayout {
      */
     private void showEmployeeCard(final EmployeeDTO employee) {
         EmployeeDTO fullEmployee = employeeService.getEmployeeWithRelations(employee.getId());
-        List<Language> allLanguages = employeeService.findAllLanguages();
+        List<LanguageEntity> allLanguages = employeeService.findAllLanguages();
         // Crear un nuevo diálogo para la tarjeta
         Dialog cardDialog = new Dialog();
         cardDialog.setDraggable(true);

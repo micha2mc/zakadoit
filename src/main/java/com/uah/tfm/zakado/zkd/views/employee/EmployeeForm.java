@@ -1,8 +1,8 @@
 package com.uah.tfm.zakado.zkd.views.employee;
 
-import com.uah.tfm.zakado.zkd.backend.data.entity.Area;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Company;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.entity.AreaEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.CompanyEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.LanguageEntity;
 import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -43,9 +43,9 @@ public class EmployeeForm extends FormLayout {
     private final static  String EMAIL_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
     private TextArea career;
-    private RadioButtonGroup<Area> area;
-    private ComboBox<Company> company;
-    private CheckboxGroup<Language> languageCheckboxGroup;
+    private RadioButtonGroup<AreaEntity> area;
+    private ComboBox<CompanyEntity> company;
+    private CheckboxGroup<LanguageEntity> languageCheckboxGroup;
     private EmailField email;
     private final TextField fullName = new TextField("Full Name");
     private final IntegerField yearOfExperience = new IntegerField ("Year Of Experience");
@@ -59,7 +59,7 @@ public class EmployeeForm extends FormLayout {
 
     Binder<EmployeeDTO> binder = new BeanValidationBinder<>(EmployeeDTO.class);
 
-    public EmployeeForm(List<Company> companies, List<Area> areas, List<Language> languages) {
+    public EmployeeForm(List<CompanyEntity> companies, List<AreaEntity> areas, List<LanguageEntity> languages) {
         addClassName("employee-form");
 
         configComboBox(companies);
@@ -69,13 +69,9 @@ public class EmployeeForm extends FormLayout {
         configEmailField();
         configNumberField();
 
-        binder.forField(company)
-                .bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
-        binder.forField(area)
-                .bind(EmployeeDTO::getArea, EmployeeDTO::setArea);
-        binder.forField(languageCheckboxGroup)
-                .bind(EmployeeDTO::getLanguages, EmployeeDTO::setLanguages);
-
+        binder.forField(company).bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
+        binder.forField(area).bind(EmployeeDTO::getArea, EmployeeDTO::setArea);
+        binder.forField(languageCheckboxGroup).bind(EmployeeDTO::getLanguages, EmployeeDTO::setLanguages);
         binder.bindInstanceFields(this);
 
         add(fullName, email, dob, yearOfExperience, annualSalary, company, area, career,
@@ -113,25 +109,25 @@ public class EmployeeForm extends FormLayout {
                         "Enter a valid email address, example: myemail@dominio.com"));
     }
 
-    private void configComboBox(List<Company> companies) {
+    private void configComboBox(List<CompanyEntity> companies) {
         company = new ComboBox<>("Company");
         company.setItems(companies);
-        company.setItemLabelGenerator(Company::getName);
+        company.setItemLabelGenerator(CompanyEntity::getName);
     }
 
-    private void configCheckboxGroup(List<Language> languages) {
+    private void configCheckboxGroup(List<LanguageEntity> languages) {
         languageCheckboxGroup = new CheckboxGroup<>();
         languageCheckboxGroup.setLabel("Languages");
         languageCheckboxGroup.setItems(languages);
-        languageCheckboxGroup.setItemLabelGenerator(Language::getName);
+        languageCheckboxGroup.setItemLabelGenerator(LanguageEntity::getName);
         languageCheckboxGroup.addThemeVariants(CheckboxGroupVariant.AURA_HORIZONTAL);
     }
 
 
-    private void configRadioButtonGroup(final List<Area> areas) {
+    private void configRadioButtonGroup(final List<AreaEntity> areas) {
         area = new RadioButtonGroup<>("Area");
         area.setItems(areas);
-        area.setItemLabelGenerator(Area::getName);
+        area.setItemLabelGenerator(AreaEntity::getName);
         area.setRenderer(new ComponentRenderer<>(area -> {
             Span name = new Span(area.getName());
             name.getStyle().set("margin-left", "10px");
@@ -239,7 +235,7 @@ public class EmployeeForm extends FormLayout {
 
     private void checkIfAreaCompanyAndLanguageAreSelected(final EmployeeDTO employee) {
         if (Objects.nonNull(employee.getArea())) {
-            Area areaToSelect = area.getListDataView()
+            AreaEntity areaToSelect = area.getListDataView()
                     .getItems()
                     .filter(a -> a.getId().equals(employee.getArea().getId()))
                     .findFirst()
@@ -250,7 +246,7 @@ public class EmployeeForm extends FormLayout {
         }
 
         if (Objects.nonNull(employee.getLanguages())) {
-            Set<Language> languagesToSelect = languageCheckboxGroup.getListDataView()
+            Set<LanguageEntity> languagesToSelect = languageCheckboxGroup.getListDataView()
                     .getItems()
                     .filter(lang -> employee.getLanguages().stream()
                             .anyMatch(empLang -> empLang.getId().equals(lang.getId())))
@@ -261,7 +257,7 @@ public class EmployeeForm extends FormLayout {
         }
 
         if (Objects.nonNull(employee.getCompany())) {
-            Company companyToSelect = company.getListDataView()
+            CompanyEntity companyToSelect = company.getListDataView()
                     .getItems()
                     .filter(c -> c.getId().equals(employee.getCompany().getId()))
                     .findFirst()

@@ -1,8 +1,8 @@
 package com.uah.tfm.zakado.zkd.backend.data.mapper.dto;
 
-import com.uah.tfm.zakado.zkd.backend.data.entity.Area;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Company;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.entity.AreaEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.CompanyEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.LanguageEntity;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,28 +21,18 @@ import java.util.Set;
 @NoArgsConstructor
 public class EmployeeDTO {
     private Long id;
-
     private String corporateKey;
-
     @NotEmpty
     private String fullName;
-
     private int yearOfExperience;
-
     private BigDecimal annualSalary;
-
     private String email;
-
     @NotNull
     private LocalDate dob;
-
     @NotNull
-    private Company company;
-
+    private CompanyEntity company;
     @NotNull
-    private Area area;
-
+    private AreaEntity area;
     private String career;
-
-    private Set<Language> languages = new HashSet<>();
+    private Set<LanguageEntity> languages = new HashSet<>();
 }

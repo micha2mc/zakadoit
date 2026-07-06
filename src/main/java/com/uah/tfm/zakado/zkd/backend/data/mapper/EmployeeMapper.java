@@ -1,9 +1,9 @@
 package com.uah.tfm.zakado.zkd.backend.data.mapper;
 
-import com.uah.tfm.zakado.zkd.backend.data.entity.Area;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Company;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Employee;
-import com.uah.tfm.zakado.zkd.backend.data.entity.Language;
+import com.uah.tfm.zakado.zkd.backend.data.entity.AreaEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.CompanyEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.EmployeeEntity;
+import com.uah.tfm.zakado.zkd.backend.data.entity.LanguageEntity;
 import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.backend.data.repository.AreaRepository;
 import com.uah.tfm.zakado.zkd.backend.data.repository.CompanyRepository;
@@ -33,8 +33,8 @@ public class EmployeeMapper {
     private final EmployeeRepository employeeRepository;
 
 
-    public EmployeeDTO toDTO(Employee employee) {
-        Set<Language> languages =  safelyLoadLanguages(employee);
+    public EmployeeDTO toDTO(EmployeeEntity employee) {
+        Set<LanguageEntity> languages =  safelyLoadLanguages(employee);
         return EmployeeDTO.builder()
                 .id(employee.getId())
                 .corporateKey(employee.getCorporateKey())
@@ -51,8 +51,8 @@ public class EmployeeMapper {
     }
 
 
-    public Employee toEntity(EmployeeDTO employeeDTO) {
-        Employee employee;
+    public EmployeeEntity toEntity(EmployeeDTO employeeDTO) {
+        EmployeeEntity employee;
 
         if (employeeDTO.getId() != null) {
             employee = employeeRepository.findById(employeeDTO.getId())
@@ -68,7 +68,7 @@ public class EmployeeMapper {
             employee.setCareer(employeeDTO.getCareer());
         } else {
             // Si es nuevo, crear entidad
-            employee = Employee.builder()
+            employee = EmployeeEntity.builder()
                     .corporateKey(employeeDTO.getCorporateKey())
                     .fullName(employeeDTO.getFullName())
                     .yearOfExperience(employeeDTO.getYearOfExperience())
@@ -81,7 +81,7 @@ public class EmployeeMapper {
 
         // 1. Company - cargar por ID
         if (employeeDTO.getCompany() != null && employeeDTO.getCompany().getId() != null) {
-            Company company = companyRepository.findById(employeeDTO.getCompany().getId())
+            CompanyEntity company = companyRepository.findById(employeeDTO.getCompany().getId())
                     .orElseThrow(() -> new EntityNotFoundException("Company not found"));
             employee.setCompany(company);
         } else {
@@ -89,18 +89,18 @@ public class EmployeeMapper {
         }
 
         if (employeeDTO.getArea() != null && employeeDTO.getArea().getId() != null) {
-            Area area = areaRepository.findById(employeeDTO.getArea().getId())
+            AreaEntity area = areaRepository.findById(employeeDTO.getArea().getId())
                     .orElseThrow(() -> new EntityNotFoundException("Area not found"));
             employee.setArea(area);
         }
 
         if (employeeDTO.getLanguages() != null) {
             Set<Long> languageIds = employeeDTO.getLanguages().stream()
-                    .map(Language::getId)
+                    .map(LanguageEntity::getId)
                     .collect(Collectors.toSet());
 
             if (!languageIds.isEmpty()) {
-                List<Language> languages = languageRepository.findAllById(languageIds);
+                List<LanguageEntity> languages = languageRepository.findAllById(languageIds);
 
                 // Verificar que todas las lenguas existen
                 if (languages.size() != languageIds.size()) {
@@ -109,7 +109,7 @@ public class EmployeeMapper {
 
                 // Si es actualización, manejar relación bidireccional
                 if (employee.getId() != null) {
-                    for (Language oldLang : employee.getLanguages()) {
+                    for (LanguageEntity oldLang : employee.getLanguages()) {
                         oldLang.getEmployees().remove(employee);
                     }
                     employee.getLanguages().clear();
@@ -119,13 +119,13 @@ public class EmployeeMapper {
                 employee.getLanguages().addAll(languages);
 
                 // Actualizar lado inverso
-                for (Language lang : languages) {
+                for (LanguageEntity lang : languages) {
                     lang.getEmployees().add(employee);
                 }
             } else {
                 // Si no hay languages, limpiar
                 if (employee.getId() != null) {
-                    for (Language oldLang : employee.getLanguages()) {
+                    for (LanguageEntity oldLang : employee.getLanguages()) {
                         oldLang.getEmployees().remove(employee);
                     }
                     employee.getLanguages().clear();
@@ -136,10 +136,10 @@ public class EmployeeMapper {
         return employee;
     }
 
-    private Set<Language> safelyLoadLanguages(Employee employee) {
+    private Set<LanguageEntity> safelyLoadLanguages(EmployeeEntity employee) {
         // Opción 1: Si ya está inicializado, usarlo
         try {
-            Set<Language> langs = employee.getLanguages();
+            Set<LanguageEntity> langs = employee.getLanguages();
             // Verificar si Hibernate devuelve una colección proxy no inicializada
             if (!Hibernate.isInitialized(langs)) {
                 return new HashSet<>(); // Colección lazy no cargada
