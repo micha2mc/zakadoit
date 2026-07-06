@@ -12,14 +12,14 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
 
     @Query(""" 
-            select e from Employee e 
+            select e from EmployeeEntity e 
             where e.corporateKey = :ck
             """)
     EmployeeEntity findEmployeeByCK(String ck);
 
 
     @Query("""
-            SELECT DISTINCT e FROM Employee e 
+            SELECT DISTINCT e FROM EmployeeEntity e 
             LEFT JOIN FETCH e.company LEFT JOIN FETCH e.area
             WHERE LOWER(e.fullName) LIKE LOWER(CONCAT('%', :filter, '%'))
             OR LOWER(e.corporateKey) LIKE LOWER(CONCAT('%', :filter, '%'))
