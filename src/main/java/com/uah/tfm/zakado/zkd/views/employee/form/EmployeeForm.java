@@ -1,4 +1,4 @@
-package com.uah.tfm.zakado.zkd.views.employee;
+package com.uah.tfm.zakado.zkd.views.employee.form;
 
 import com.uah.tfm.zakado.zkd.backend.data.entity.AreaEntity;
 import com.uah.tfm.zakado.zkd.backend.data.entity.CompanyEntity;
