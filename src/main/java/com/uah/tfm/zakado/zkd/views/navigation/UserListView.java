@@ -3,15 +3,21 @@ package com.uah.tfm.zakado.zkd.views.navigation;
 import com.uah.tfm.zakado.zkd.backend.data.entity.User;
 import com.uah.tfm.zakado.zkd.backend.service.UserService;
 import com.uah.tfm.zakado.zkd.views.MainLayout;
+import com.uah.tfm.zakado.zkd.views.login.UserFormView;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.security.AuthenticationContext;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.util.List;
@@ -30,17 +36,38 @@ public class UserListView extends VerticalLayout {
     public UserListView(UserService userService, AuthenticationContext authContext) {
         this.userService = userService;
         this.authContext = authContext;
+        Button nuevoUsuarioBtn = new Button("➕ New User");
+        nuevoUsuarioBtn.addThemeVariants(com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY);
 
-        grid.addColumn(User::getUsername).setHeader("Usuario");
+        nuevoUsuarioBtn.addClickListener(event -> {
+            getUI().ifPresent(ui -> ui.navigate(UserFormView.class));
+        });
+        HorizontalLayout actions = new HorizontalLayout(nuevoUsuarioBtn);
+        actions.addClassNames(LumoUtility.Margin.Bottom.MEDIUM);
+
+        grid.setPartNameGenerator(user -> {
+            if (!user.isEnabled()) {
+                return "disabled-user";
+            }
+            return null;
+        });
+
+        grid.addColumn(new ComponentRenderer<>(user -> {
+            Span username = new Span(user.getUsername());
+            if (!user.isEnabled()) {
+                username.addClassNames(LumoUtility.TextColor.SECONDARY);
+            }
+            return username;
+        })).setHeader("Usuario");
         grid.addComponentColumn(this::createRoleComboBox).setHeader("Rol");
         grid.addComponentColumn(this::createEnabledCheckbox).setHeader("Activo");
 
         refreshGrid();
 
-        add(grid);
+        add(actions, grid);
     }
 
-    private boolean esUsuarioActual(User user) {
+    private boolean isCurrentUser(User user) {
         return authContext.getAuthenticatedUser(User.class)
                 .map(actual -> actual.getUsername().equals(user.getUsername()))
                 .orElse(false);
@@ -53,7 +80,7 @@ public class UserListView extends VerticalLayout {
         comboBox.setWidth("120px");
 
         // El admin no puede cambiar su propio rol
-        comboBox.setEnabled(!esUsuarioActual(user));
+        comboBox.setEnabled(!isCurrentUser(user));
 
         comboBox.addValueChangeListener(event -> {
             if (event.getValue() == null) {
@@ -71,7 +98,7 @@ public class UserListView extends VerticalLayout {
         Checkbox checkbox = new Checkbox(user.isEnabled());
 
         // El admin no puede desactivarse a sí mismo
-        checkbox.setEnabled(!esUsuarioActual(user));
+        checkbox.setEnabled(!isCurrentUser(user));
 
         checkbox.addValueChangeListener(event -> {
             boolean nuevoEstado = event.getValue();

@@ -53,11 +53,23 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        addToDrawer(new VerticalLayout(
+        VerticalLayout drawerLayout = new VerticalLayout(
                 new RouterLink("Employees", EmployeeView.class),
                 new RouterLink("Dashboard", DashboardView.class),
-                new RouterLink("Reports", DownloadReportsView.class),
-                new RouterLink("Userlist", UserListView.class)
-        ));
+                new RouterLink("Reports", DownloadReportsView.class)
+        );
+        drawerLayout.setPadding(true);
+        drawerLayout.setSpacing(true);
+        if (isAdmin()) {
+            RouterLink userListLink = new RouterLink("Userlist", UserListView.class);
+            drawerLayout.add(userListLink);
+        }
+        addToDrawer(drawerLayout);
+    }
+
+    private boolean isAdmin() {
+        return authContext.getAuthenticatedUser(User.class)
+                .map(user -> "ADMIN".equals(user.getRole()))
+                .orElse(false);
     }
 }
