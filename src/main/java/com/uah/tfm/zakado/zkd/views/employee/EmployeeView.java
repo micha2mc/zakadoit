@@ -41,15 +41,12 @@ import java.util.Objects;
 @PageTitle("Employees | Zakado IT")
 @Route(value = "", layout = MainLayout.class)
 public class EmployeeView extends VerticalLayout {
-
     private Dialog dialog;
     private EmployeeForm form;
-    private final EmployeeService employeeService;
-
     private final TextField filterText = new TextField();
     private final Grid<EmployeeDTO> grid = new Grid<>(EmployeeDTO.class);
 
-
+    private final EmployeeService employeeService;
     public EmployeeView(final EmployeeService employeeService) {
         this.employeeService = employeeService;
         addClassName("employee-view");

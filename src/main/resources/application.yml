@@ -1,12 +1,6 @@
 server:
   port: 8081
 spring:
-  #jpa:
-    #defer-datasource-initialization: true
-  #sql:
-  #  init:
-  #    mode: embedded  # o always
-  #    data-locations: classpath:INSERT_DEFAULT_DATA.sql
   application:
     name: Zakado IT
 
@@ -17,13 +11,18 @@ spring:
     password:
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
   mustache:
     check-template-location: false
 vaadin:

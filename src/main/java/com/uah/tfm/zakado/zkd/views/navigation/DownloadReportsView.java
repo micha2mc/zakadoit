@@ -7,11 +7,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 import java.io.ByteArrayOutputStream;
 
-@PermitAll
+@RolesAllowed("ADMIN")
 @PageTitle("Reports | ZAKADO IT")
 @Route(value = "reports", layout = MainLayout.class)
 public class DownloadReportsView extends VerticalLayout {

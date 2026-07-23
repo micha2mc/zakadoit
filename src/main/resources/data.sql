@@ -1,11 +1,19 @@
-INSERT INTO zakadoit.area (ID, NAME) VALUES
+--Usuario	Contraseña	Rol
+--admin	admin123	ADMIN
+--mmicha	user123	USER
+INSERT IGNORE INTO users (username, password, email, role, enabled) VALUES
+('admin', '$2b$10$JWDj2jNRFkcWaVdbBGtfKuzgRP7dy9IaIkDZ5BVLi3LX/TQwroDki', 'admin@zakadoit.com', 'ADMIN', true),
+('mmicha', '$2b$10$DTT8nr9sVedtSpTPFym0WudI25LAFLAHvObkwU69Lz8Dx6aN72PDi', 'mmicha@zakadoit.com', 'USER', true);
+
+
+INSERT IGNORE INTO zakadoit.area (ID, NAME) VALUES
 (1, 'Estrategía y Consultoría'),
 (2, 'Desarrollo Software'),
 (3, 'Sistemas e Infraestructuras'),
 (4, 'Ciberseguridad'),
 (5, 'Service Desk');
 
-INSERT INTO zakadoit.companies (ID, NAME) VALUES
+INSERT IGNORE INTO zakadoit.companies (ID, NAME) VALUES
 (1, 'ING'),
 (2, 'BBVA'),
 (3, 'SANTANDER'),
@@ -13,7 +21,7 @@ INSERT INTO zakadoit.companies (ID, NAME) VALUES
 (5, 'MINISTERIO DEFENSA'),
 (6, 'MUTUA MADRILEÑA');
 
-INSERT INTO zakadoit.`language` (ID, NAME, ISOCODE) VALUES
+INSERT IGNORE INTO zakadoit.`language` (ID, NAME, ISOCODE) VALUES
 (1, 'Español', 'ES'),
 (2, 'Francés', 'FR'),
 (3, 'Inglés', 'EN'),
@@ -21,7 +29,7 @@ INSERT INTO zakadoit.`language` (ID, NAME, ISOCODE) VALUES
 
 
 -- Insertar Employees
-INSERT INTO zakadoit.employee (id, salary_per_year, career, corporate_key, date_of_birth, email, full_name, year_of_experience, area_id, company_id) VALUES
+INSERT IGNORE INTO zakadoit.employee (id, salary_per_year, career, corporate_key, date_of_birth, email, full_name, year_of_experience, area_id, company_id) VALUES
 (1000, 55000.00, 'Software Developer', 'IH44ZV', '1987-03-15', 'obama.watson@zakadoit.com', 'Juan Obama Watson', 8, 2, 1),
 (1001, 24000.00, 'Aprendiz de Ciberseguridad con la integración de IA', 'KO96PZ', '1999-02-25', 'MBULITO.SANTANDER@ZAKADOIT.COM', 'Paloma Santander Mbulito', 2, 4, 4),
 (1002, 68000.00, 'Experto en Sistemas e Infraestucturas aeronaáticas ', 'UH88QP', '1989-05-30', 'carretero.gonzalez@zakadoit.com', 'Luis Carretero González', 10, 3, 5),
@@ -38,7 +46,7 @@ INSERT INTO zakadoit.employee (id, salary_per_year, career, corporate_key, date_
 (1024, 40000.00, 'Software Developer', 'FU42RN', '1998-09-27', 'antonio.ndong@zakadoit.com', 'Antonio Ndong  Aznar', 3, 2, 1);
 
 -- Insertar relaciones Employee-Language
-INSERT INTO zakadoit.employee_language (employee_id, language_id) VALUES
+INSERT IGNORE INTO zakadoit.employee_language (employee_id, language_id) VALUES
 (1000, 1), (1000, 2), (1000, 3), (1000, 4),
 (1001, 1), (1001, 2), (1001, 3),
 (1002, 1), (1002, 3),
@@ -53,14 +61,4 @@ INSERT INTO zakadoit.employee_language (employee_id, language_id) VALUES
 (1022, 1), (1022, 3),
 (1023, 1), (1023, 2), (1023, 3), (1023, 4),
 (1024, 1), (1024, 2), (1024, 3), (1024, 4);
-
-
-
-
-
-
-
-
-
-
 

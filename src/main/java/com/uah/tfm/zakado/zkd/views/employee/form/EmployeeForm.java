@@ -11,7 +11,6 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
-import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -120,7 +119,7 @@ public class EmployeeForm extends FormLayout {
         languageCheckboxGroup.setLabel("Languages");
         languageCheckboxGroup.setItems(languages);
         languageCheckboxGroup.setItemLabelGenerator(LanguageEntity::getName);
-        languageCheckboxGroup.addThemeVariants(CheckboxGroupVariant.AURA_HORIZONTAL);
+        //languageCheckboxGroup.addThemeVariants(CheckboxGroupVariant.AURA_HORIZONTAL);
     }
 
 
