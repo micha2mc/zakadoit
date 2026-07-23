@@ -14,11 +14,11 @@ import java.io.ByteArrayOutputStream;
 @PermitAll
 @PageTitle("Reports | ZAKADO IT")
 @Route(value = "reports", layout = MainLayout.class)
-public class DownloadReports extends VerticalLayout {
+public class DownloadReportsView extends VerticalLayout {
 
     private final EmployeeService employeeService;
 
-    public DownloadReports(final EmployeeService employeeService) {
+    public DownloadReportsView(final EmployeeService employeeService) {
         this.employeeService = employeeService;
         addClassName("reports-view");
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);

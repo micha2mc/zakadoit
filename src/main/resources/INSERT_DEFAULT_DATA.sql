@@ -1,11 +1,11 @@
-INSERT INTO "AREA" (ID, NAME) VALUES
+INSERT INTO zakadoit.area (ID, NAME) VALUES
 (1, 'Estrategía y Consultoría'),
 (2, 'Desarrollo Software'),
 (3, 'Sistemas e Infraestructuras'),
 (4, 'Ciberseguridad'),
 (5, 'Service Desk');
 
-INSERT INTO "COMPANIES" (ID, NAME) VALUES
+INSERT INTO zakadoit.companies (ID, NAME) VALUES
 (1, 'ING'),
 (2, 'BBVA'),
 (3, 'SANTANDER'),
@@ -13,7 +13,7 @@ INSERT INTO "COMPANIES" (ID, NAME) VALUES
 (5, 'MINISTERIO DEFENSA'),
 (6, 'MUTUA MADRILEÑA');
 
-INSERT INTO "LANGUAGE" (ID, NAME, ISOCODE) VALUES
+INSERT INTO zakadoit.`language` (ID, NAME, ISOCODE) VALUES
 (1, 'Español', 'ES'),
 (2, 'Francés', 'FR'),
 (3, 'Inglés', 'EN'),
@@ -21,7 +21,7 @@ INSERT INTO "LANGUAGE" (ID, NAME, ISOCODE) VALUES
 
 
 -- Insertar Employees
-INSERT INTO employee (id, salary_per_year, career, corporate_key, date_of_birth, email, full_name, year_of_experience, area_id, company_id) VALUES
+INSERT INTO zakadoit.employee (id, salary_per_year, career, corporate_key, date_of_birth, email, full_name, year_of_experience, area_id, company_id) VALUES
 (1000, 55000.00, 'Software Developer', 'IH44ZV', '1987-03-15', 'obama.watson@zakadoit.com', 'Juan Obama Watson', 8, 2, 1),
 (1001, 24000.00, 'Aprendiz de Ciberseguridad con la integración de IA', 'KO96PZ', '1999-02-25', 'MBULITO.SANTANDER@ZAKADOIT.COM', 'Paloma Santander Mbulito', 2, 4, 4),
 (1002, 68000.00, 'Experto en Sistemas e Infraestucturas aeronaáticas ', 'UH88QP', '1989-05-30', 'carretero.gonzalez@zakadoit.com', 'Luis Carretero González', 10, 3, 5),
@@ -37,11 +37,8 @@ INSERT INTO employee (id, salary_per_year, career, corporate_key, date_of_birth,
 (1023, 75000.00, 'Project Manager', 'PN68RD', '1980-07-22', 'maria.lopez@zakadoit.com', 'María López Fernández', 12, 1, 4),
 (1024, 40000.00, 'Software Developer', 'FU42RN', '1998-09-27', 'antonio.ndong@zakadoit.com', 'Antonio Ndong  Aznar', 3, 2, 1);
 
--- reinicio de la secuencia
-ALTER SEQUENCE employee_id_seq RESTART WITH 1025;
-
 -- Insertar relaciones Employee-Language
-INSERT INTO employee_language (employee_id, language_id) VALUES
+INSERT INTO zakadoit.employee_language (employee_id, language_id) VALUES
 (1000, 1), (1000, 2), (1000, 3), (1000, 4),
 (1001, 1), (1001, 2), (1001, 3),
 (1002, 1), (1002, 3),

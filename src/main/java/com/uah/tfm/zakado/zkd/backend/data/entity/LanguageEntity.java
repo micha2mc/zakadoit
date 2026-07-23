@@ -14,6 +14,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Table(name = "language")
 @AllArgsConstructor
 @NoArgsConstructor
 public class LanguageEntity {

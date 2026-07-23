@@ -5,6 +5,7 @@ import com.uah.tfm.zakado.zkd.backend.data.mapper.dto.EmployeeDTO;
 import com.uah.tfm.zakado.zkd.backend.exception.EmployeeEmptyException;
 import com.uah.tfm.zakado.zkd.backend.service.EmployeeService;
 import com.uah.tfm.zakado.zkd.views.MainLayout;
+import com.uah.tfm.zakado.zkd.views.employee.form.EmployeeCard;
 import com.uah.tfm.zakado.zkd.views.employee.form.EmployeeForm;
 import com.uah.tfm.zakado.zkd.views.utils.ServiceUtils;
 import com.vaadin.flow.component.Component;
