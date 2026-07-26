@@ -19,15 +19,15 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 
 @Route(value = "users/new", layout = MainLayout.class)
-@PageTitle("Nuevo usuario | Zakado IT")
+@PageTitle("New User | Zakado IT")
 @RolesAllowed("ADMIN")
 public class UserFormView extends VerticalLayout {
 
     private final UserService userService;
     private final BeanValidationBinder<UserFormData> binder = new BeanValidationBinder<>(UserFormData.class);
 
-    private final TextField username = new TextField("Usuario");
-    private final PasswordField password = new PasswordField("Contraseña");
+    private final TextField username = new TextField("User");
+    private final PasswordField password = new PasswordField("Password");
     private final EmailField email = new EmailField("Email");
 
     public UserFormView(UserService userService) {
@@ -37,10 +37,10 @@ public class UserFormView extends VerticalLayout {
         formLayout.setWidth("400px");
         formLayout.setMaxWidth("90vw");
 
-        Button saveButton = new Button("Guardar", event -> saveUser());
+        Button saveButton = new Button("Save", event -> saveUser());
         saveButton.getElement().getThemeList().add("primary");
 
-        Button cancelButton = new Button("Cancelar", event -> {
+        Button cancelButton = new Button("Cancel", event -> {
             getUI().ifPresent(ui -> ui.navigate(UserListView.class));
         });
 
@@ -54,7 +54,7 @@ public class UserFormView extends VerticalLayout {
         if (binder.writeBeanIfValid(formData)) {
             try {
                 userService.createUser(formData.getUsername(), formData.getPassword(), formData.getEmail());
-                Notification.show("Usuario creado correctamente (rol USER, activo)")
+                Notification.show("User created successfully (role: USER, active)")
                         .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 getUI().ifPresent(ui -> ui.navigate(UserListView.class));
             } catch (IllegalArgumentException e) {

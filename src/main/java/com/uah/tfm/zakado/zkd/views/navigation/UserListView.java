@@ -23,7 +23,7 @@ import jakarta.annotation.security.RolesAllowed;
 import java.util.List;
 
 @Route(value = "users", layout = MainLayout.class)
-@PageTitle("Usuarios | Zakado IT")
+@PageTitle("Users | Zakado IT")
 @RolesAllowed("ADMIN")
 public class UserListView extends VerticalLayout {
 
@@ -58,9 +58,9 @@ public class UserListView extends VerticalLayout {
                 username.addClassNames(LumoUtility.TextColor.SECONDARY);
             }
             return username;
-        })).setHeader("Usuario");
-        grid.addComponentColumn(this::createRoleComboBox).setHeader("Rol");
-        grid.addComponentColumn(this::createEnabledCheckbox).setHeader("Activo");
+        })).setHeader("Users");
+        grid.addComponentColumn(this::createRoleComboBox).setHeader("Role");
+        grid.addComponentColumn(this::createEnabledCheckbox).setHeader("State");
 
         refreshGrid();
 
@@ -104,7 +104,7 @@ public class UserListView extends VerticalLayout {
             boolean nuevoEstado = event.getValue();
             userService.setEnabled(user.getId(), nuevoEstado);
             Notification.show(
-                    "Usuario " + user.getUsername() + (nuevoEstado ? " activado" : " desactivado"),
+                    "User " + user.getUsername() + (nuevoEstado ? " activated" : " Disabled"),
                     2000,
                     Notification.Position.TOP_CENTER
             ).addThemeVariants(nuevoEstado ? NotificationVariant.LUMO_SUCCESS : NotificationVariant.LUMO_ERROR);

@@ -1,9 +1,7 @@
 --Usuario	Contraseña	Rol
 --admin	admin123	ADMIN
---mmicha	user123	USER
 INSERT IGNORE INTO users (username, password, email, role, enabled) VALUES
-('admin', '$2b$10$JWDj2jNRFkcWaVdbBGtfKuzgRP7dy9IaIkDZ5BVLi3LX/TQwroDki', 'admin@zakadoit.com', 'ADMIN', true),
-('mmicha', '$2b$10$DTT8nr9sVedtSpTPFym0WudI25LAFLAHvObkwU69Lz8Dx6aN72PDi', 'mmicha@zakadoit.com', 'USER', true);
+('admin', '$2b$10$JWDj2jNRFkcWaVdbBGtfKuzgRP7dy9IaIkDZ5BVLi3LX/TQwroDki', 'admin@zakadoit.com', 'ADMIN', true);
 
 
 INSERT IGNORE INTO zakadoit.area (ID, NAME) VALUES

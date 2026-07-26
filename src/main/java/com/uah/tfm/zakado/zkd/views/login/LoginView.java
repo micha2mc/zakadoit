@@ -22,7 +22,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 		loginForm.setAction("login");
 		loginForm.addLoginListener(e -> {
-			Notification.show("Iniciando sesión...", 1000, Notification.Position.TOP_CENTER);
+			Notification.show("Logging in...", 1000, Notification.Position.TOP_CENTER);
 		});
 
 		add(loginForm);
@@ -35,17 +35,17 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		boolean isAuthenticated = auth != null && auth.isAuthenticated()
 				&& !"anonymousUser".equals(auth.getPrincipal());
 		if (isAuthenticated) {
-			event.forwardTo(""); // o la ruta de tu DashboardView
+			event.forwardTo("");
 			return;
 		}
 
 		if (event.getLocation().getQueryParameters().getParameters().containsKey("error")) {
 			loginForm.setError(true);
-			Notification.show("Credenciales incorrectas", 3000, Notification.Position.TOP_CENTER);
+			Notification.show("Incorrect credentials", 3000, Notification.Position.TOP_CENTER);
 		}
 
 		if (event.getLocation().getQueryParameters().getParameters().containsKey("logout")) {
-			Notification.show("Has cerrado sesión", 3000, Notification.Position.TOP_CENTER);
+			Notification.show("You have logged out", 3000, Notification.Position.TOP_CENTER);
 		}
 	}
 }
