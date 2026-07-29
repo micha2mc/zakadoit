@@ -56,7 +56,7 @@ public class EmployeeForm extends FormLayout {
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    Binder<EmployeeDTO> binder = new BeanValidationBinder<>(EmployeeDTO.class);
+    Binder<EmployeeDTO> binder;
 
     public EmployeeForm(List<CompanyEntity> companies, List<AreaEntity> areas, List<LanguageEntity> languages) {
         addClassName("employee-form");
@@ -67,7 +67,7 @@ public class EmployeeForm extends FormLayout {
         configTextArea();
         configEmailField();
         configNumberField();
-
+        binder = new BeanValidationBinder<>(EmployeeDTO.class);
         binder.forField(company).bind(EmployeeDTO::getCompany, EmployeeDTO::setCompany);
         binder.forField(area).bind(EmployeeDTO::getArea, EmployeeDTO::setArea);
         binder.forField(languageCheckboxGroup).bind(EmployeeDTO::getLanguages, EmployeeDTO::setLanguages);

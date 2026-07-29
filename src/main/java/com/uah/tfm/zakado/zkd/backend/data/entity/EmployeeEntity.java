@@ -15,28 +15,23 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "employee")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @Builder
+@Table(name = "employee")
 public class EmployeeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "idgenerator")
-    @SequenceGenerator(name = "idgenerator",
-            sequenceName = "employee_id_seq",
-            initialValue = 1000,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgenerator")
+    @SequenceGenerator(name = "idgenerator", sequenceName = "employee_id_seq", initialValue = 1000,
     allocationSize = 1)
     private Long id;
 
     @NotEmpty
     private String corporateKey;
-
     @NotEmpty
     private String fullName;
-
     @NotNull
     @Column(name = "year_of_experience")
     private int yearOfExperience;
