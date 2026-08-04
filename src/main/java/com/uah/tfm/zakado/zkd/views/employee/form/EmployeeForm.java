@@ -105,7 +105,7 @@ public class EmployeeForm extends FormLayout {
         email.setI18n(new EmailField.EmailFieldI18n()
                 .setRequiredErrorMessage("Field is required")
                 .setPatternErrorMessage(
-                        "Enter a valid email address, example: myemail@dominio.com"));
+                        "Introduce un email válido, ej: nombre@dominio.com"));
     }
 
     private void configComboBox(List<CompanyEntity> companies) {

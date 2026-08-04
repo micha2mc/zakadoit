@@ -129,7 +129,7 @@ public class EmployeeView extends VerticalLayout {
                 employeeService.deleteEmployee(employeeDTO);
                 updateList();
                 Notification.show("Employee deleted successfully",
-                                10000, Notification.Position.MIDDLE)
+                                2000, Notification.Position.MIDDLE)
                         .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             } catch (Exception e) {
                 String message = "Error deleting employee";
@@ -157,7 +157,7 @@ public class EmployeeView extends VerticalLayout {
             updateList();
             dialog.close();
             Notification.show("Employee saved successfully",
-                            10000, Notification.Position.MIDDLE)
+                            2000, Notification.Position.MIDDLE)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             String message = "Error saving employee";

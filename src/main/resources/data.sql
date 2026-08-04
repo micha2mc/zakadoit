@@ -36,12 +36,12 @@ INSERT IGNORE INTO zakadoit.employee (id, salary_per_year, career, corporate_key
 (1005, 35000.00, 'Desarrollo de Aplicaciones Web', 'VR21YS', '2000-01-20', 'wang.fang@zakadoit.com', 'Wang Fang', 2, 2, 2),
 (1006, 50000.00, 'Experto en desarrollo y DevOps', 'EA21BU', '1995-06-25', 'nakamura.haruto@zakadoit.com', 'Nakamura Haruto', 7, 2, 4),
 (1007, 75000.00, 'Experto en Ciberseguridad', 'TJ31LH', '1990-07-03', 'suzuki.sakura@zakadoit.com', 'Suzuki Sakura', 10, 4, 5),
-(1018, 100000.00, 'Estrategía, Gestión, Contabilidad y consultoría', 'KV96UY', '1985-06-06', 'cho.yeon-woo@zakadoit.com', 'Cho Yeon-woo', 15, 1, 2),
-(1019, 30000.00, 'Incidencias', 'MK30UY', '1990-09-25', 'mohamed.ali@zakadoit.com', 'Mohamed Ali', 2, 5, 3),
-(1020, 66000.00, 'Experta en Arquitectura y desarrollo.', 'BX43PF', '2001-12-24', 'priya.sharma@zakadoit.com', 'Priya Sharma', 8, 2, 4),
-(1022, 55000.00, 'Software Developer', 'OY40XE', '1985-03-15', 'juan.perez@zakadoit.com', 'Juan Pérez García', 8, 2, 5),
-(1023, 75000.00, 'Project Manager', 'PN68RD', '1980-07-22', 'maria.lopez@zakadoit.com', 'María López Fernández', 12, 1, 4),
-(1024, 40000.00, 'Software Developer', 'FU42RN', '1998-09-27', 'antonio.ndong@zakadoit.com', 'Antonio Ndong  Aznar', 3, 2, 1);
+(1008, 100000.00, 'Estrategía, Gestión, Contabilidad y consultoría', 'KV96UY', '1985-06-06', 'cho.yeon-woo@zakadoit.com', 'Cho Yeon-woo', 15, 1, 2),
+(1009, 30000.00, 'Incidencias', 'MK30UY', '1990-09-25', 'mohamed.ali@zakadoit.com', 'Mohamed Ali', 2, 5, 3),
+(1010, 66000.00, 'Experta en Arquitectura y desarrollo.', 'BX43PF', '2001-12-24', 'priya.sharma@zakadoit.com', 'Priya Sharma', 8, 2, 4),
+(1011, 55000.00, 'Software Developer', 'OY40XE', '1985-03-15', 'juan.perez@zakadoit.com', 'Juan Pérez García', 8, 2, 5),
+(1012, 75000.00, 'Project Manager', 'PN68RD', '1980-07-22', 'maria.lopez@zakadoit.com', 'María López Fernández', 12, 1, 4),
+(1013, 40000.00, 'Software Developer', 'FU42RN', '1998-09-27', 'antonio.ndong@zakadoit.com', 'Antonio Ndong  Aznar', 3, 2, 1);
 
 -- Insertar relaciones Employee-Language
 INSERT IGNORE INTO zakadoit.employee_language (employee_id, language_id) VALUES
@@ -53,10 +53,10 @@ INSERT IGNORE INTO zakadoit.employee_language (employee_id, language_id) VALUES
 (1005, 1), (1005, 3), (1005, 4),
 (1006, 1), (1006, 2), (1006, 3),
 (1007, 1), (1007, 2), (1007, 3),
-(1018, 1), (1018, 2), (1018, 3),
-(1019, 1), (1019, 2), (1019, 3),
-(1020, 1), (1020, 2), (1020, 3),
-(1022, 1), (1022, 3),
-(1023, 1), (1023, 2), (1023, 3), (1023, 4),
-(1024, 1), (1024, 2), (1024, 3), (1024, 4);
+(1008, 1), (1008, 2), (1008, 3),
+(1009, 1), (1009, 2), (1009, 3),
+(1010, 1), (1010, 2), (1010, 3),
+(1011, 1), (1011, 3),
+(1012, 1), (1012, 2), (1012, 3), (1012, 4),
+(1013, 1), (1013, 2), (1013, 3), (1013, 4);
 

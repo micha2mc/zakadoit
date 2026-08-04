@@ -54,16 +54,17 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         VerticalLayout drawerLayout = new VerticalLayout(
-                new RouterLink("Employees", EmployeeView.class),
-                new RouterLink("Dashboard", DashboardView.class),
-                new RouterLink("Reports", DownloadReportsView.class)
-        );
+                new RouterLink("Employees", EmployeeView.class));
         drawerLayout.setPadding(true);
         drawerLayout.setSpacing(true);
         if (isAdmin()) {
             RouterLink userListLink = new RouterLink("Userlist", UserListView.class);
             drawerLayout.add(userListLink);
         }
+        RouterLink dashboardLink = new RouterLink("Dashboard", DashboardView.class);
+        RouterLink reportsLink = new RouterLink("Reports", DownloadReportsView.class);
+        drawerLayout.add(reportsLink);
+        drawerLayout.add(dashboardLink);
         addToDrawer(drawerLayout);
     }
 
